@@ -41,8 +41,8 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array This plugin's options.
      */
     protected $_options = array(
-        // 12345 means example.
-        'ark_naan' => '12345',
+        // 12345 means example and 99999 means test.
+        'ark_naan' => '99999',
         'ark_format_name' => 'base',
         'ark_prefix_collection' => '',
         'ark_suffix_collection' => '',

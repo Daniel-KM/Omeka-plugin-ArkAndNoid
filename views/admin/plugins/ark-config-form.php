@@ -18,7 +18,7 @@
             <?php echo $this->formText('ark_naan', get_option('ark_naan'), null); ?>
             <p class="explanation">
                 <?php echo __('This required unique number, usually with five digits, is assigned for free by the California Digital Library to any institution with a historical or archival purposes.'); ?>
-                <?php echo __('The naan "12345" is a special one and serves for example purposes.'); ?>
+                <?php echo __('The naan "12345" is a special one and serves for example purposes and "99999" is for test purposes.'); ?>
             </p>
         </div>
     </div>

@@ -5,7 +5,7 @@ Ark (plugin for Omeka)
 can replace the default [cool URIs] of each record, that corresponds to the
 simple number of a row in a table of the database.
 
-Arks are short, opaque, meaningless, universel, unique and persistent ids for
+Arks are short, opaque, meaningless, universal, unique and persistent ids for
 any records. The acronym "ark" means "Archival Resource Key". This is a
 reference to the Noah's ark (digital documents will have a long life) and to the
 world of archives (Omeka can be an institutional archive) too. Optionally, the
@@ -48,7 +48,7 @@ Arks for derivatives files are represented as:
     http://example.org/ark:/12345/b6KN/2.thumbnail
 
 Currently, the links to physical files are created via the standard function
-record_url() and the type of derivative, as `record_url('$file, 'original')`:
+record_url() and the type of derivative, as `record_url($file, 'original')`:
 
 The format of the name can be customized with a prefix (recommended), a suffix
 and a control key (recommended too). The qualifier part is not required to be
@@ -57,9 +57,8 @@ opaque. Advanced schemas can be added via the filters "ark_format_names" and
 
 So the name can be obtained too from another tool used to create and manage
 arks, like [NOID], a generator of "nice opaque identifiers". This is useful too
-if other unique ids or permanent urls are already created via free or a
-commercial systems [PURL], [DOI], [Handle], etc. (see the full [naan registry]
-example):
+if other unique ids or permanent urls are already created via free or commercial
+systems [PURL], [DOI], [Handle], etc. (see the full [CDL example]):
 
 ```
     http://OwlBike.example.org/ark:/13030/tqb3kh97gh8w   <----  Example Key
@@ -105,6 +104,7 @@ Currently, no check is done on the uniqueness of an ark, but default formats
 create unique ids, because they are based on the Omeka id.
 
 ** IMPORTANT **
+
 It's not recommended to change parameters once records are public, in order to
 keep the consistency and the sustainability of the archive.
 
@@ -171,7 +171,7 @@ Copyright
 [PURL]: https://purl.org
 [DOI]: http://www.doi.org
 [Handle]: http://handle.net
-[naan registry]: http://www.cdlib.org/services/uc3/naan_registry.txt
+[CDL example]: https://wiki.ucop.edu/display/DataCite/Identifier+Concepts+and+Practices+at+the+California+Digital+Library
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
 [plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/Issues
