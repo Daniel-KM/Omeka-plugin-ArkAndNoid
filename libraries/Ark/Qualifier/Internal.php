@@ -34,7 +34,7 @@ class Ark_Qualifier_Internal extends Ark_Qualifier_Abstract
                         return pathinfo($record->filename, PATHINFO_FILENAME);
 
                     case 'original_filename':
-                        return $record->original_filename;
+                        return pathinfo($record->original_filename, PATHINFO_BASENAME);
 
                     case 'original_filename_without_extension':
                         return pathinfo($record->original_filename, PATHINFO_FILENAME);
@@ -91,10 +91,10 @@ class Ark_Qualifier_Internal extends Ark_Qualifier_Abstract
                         return $qualifierRecord;
 
                     case 'original_filename':
-                        $qualifierRecord = get_record('File', array(
-                            'item_id' => $record->id,
-                            'original_filename' => $qualifier,
-                        ));
+                        $qualifierRecord  = get_db()->getTable('File')->findBySql(
+                            'item_id = ? AND original_filename LIKE ?',
+                            array($record->id, '%' . $qualifier),
+                            true);
                         return $qualifierRecord;
 
                     case 'filename_without_extension':
