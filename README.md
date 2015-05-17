@@ -174,7 +174,7 @@ Copyright
 [CDL example]: https://wiki.ucop.edu/display/DataCite/Identifier+Concepts+and+Practices+at+the+California+Digital+Library
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
-[plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/Issues
+[plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/issues
 [CeCILL v2.1]: http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
