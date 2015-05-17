@@ -51,6 +51,9 @@ class Ark_View_Helper_RecordUrl extends Omeka_View_Helper_RecordUrl
         // Get the ark url if any.
         $ark = $this->_getArk($record, $action);
         if ($ark) {
+            if (!isset($ark['qualifier'])) {
+                $ark['qualifier'] = '';
+            }
             $route = 'ark_id';
             $urlString = $this->view->url($ark, $route, $queryParams);
             if ($getAbsoluteUrl) {
