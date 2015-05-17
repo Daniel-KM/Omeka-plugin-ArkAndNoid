@@ -159,7 +159,7 @@ abstract class Ark_Name_Abstract
         }
 
         if ($fromBaseInput != '0123456789') {
-            $base10 = convBase($numberInput, $fromBaseInput, '0123456789');
+            $base10 = $this->_convBase($numberInput, $fromBaseInput, '0123456789');
         }
         else {
             $base10 = $numberInput;
