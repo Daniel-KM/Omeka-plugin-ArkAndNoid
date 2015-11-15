@@ -118,8 +118,10 @@ where: http://example.com/ark:/12345/',
     public function hookConfig($args)
     {
         $post = $args['post'];
-        foreach ($post as $key => $value) {
-            set_option($key, $value);
+        foreach ($this->_options as $optionKey => $optionValue) {
+            if (isset($post[$optionKey])) {
+                set_option($optionKey, $post[$optionKey]);
+            }
         }
     }
 
@@ -128,7 +130,19 @@ where: http://example.com/ark:/12345/',
      */
     public function hookDefineRoutes($args)
     {
-        $args['router']->addConfig(new Zend_Config_Ini(dirname(__FILE__) . '/routes.ini', 'routes'));
+        $router = $args['router'];
+        $router->addConfig(new Zend_Config_Ini(dirname(__FILE__) . '/routes.ini', 'routes'));
+
+        // Add a main policy route.
+        $router->addRoute('ark_policy_short', new Zend_Controller_Router_Route(
+            'ark/policy',
+            array(
+                'module' => 'ark',
+                'controller' => 'index',
+                'action' => 'policy',
+                'naan' => get_option('ark_naan'),
+            )
+        ));
     }
 
     /**

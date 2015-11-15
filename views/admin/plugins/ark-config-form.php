@@ -2,7 +2,7 @@
 <?php
     echo __('Ark allows to creates and manages unique, universel and persistent ark identifiers.') . '<br />';
     echo __('See %s and %sthe official help%s for more informations.',
-        '<a href="https://github.com/Daniel-KM/Ark4Omeka">ReadMe</a>',
+        '<a href="https://github.com/Daniel-KM/ArkForOmeka">ReadMe</a>',
         '<a href="https://confluence.ucop.edu/display/Curation/ARK">', '</a>');
 ?>
 </p>

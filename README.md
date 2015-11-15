@@ -73,6 +73,8 @@ All arks are saved as Dublin Core Identifier, as recommended. This allows to
 make a check to avoid duplicates, that are forbidden. This applies to collection
 and items. For files, the qualifier part is managed dynamically.
 
+The policy is available at "http://example.org/ark/policy" and "http://example.org/ark:/12345/policy".
+
 Ark can be displayed by default instead of the default internal ids. This plugin
 is fully compatible with [Clean Url]: an ark can be used for machine purposes
 and a clean url for true humans and for the natural referencement by search
@@ -162,7 +164,7 @@ Copyright
 
 
 [Ark]: https://github.com/Daniel-KM/ArkForOmeka
-[Omeka]: http://www.omeka.org
+[Omeka]: https://omeka.org
 [ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
 [Cool URIs]: https://www.w3.org/TR/cooluris
 [N2T]: http://n2t.org
@@ -175,7 +177,7 @@ Copyright
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
 [plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/issues
-[CeCILL v2.1]: http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
+[CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
 [OSI]: http://opensource.org
