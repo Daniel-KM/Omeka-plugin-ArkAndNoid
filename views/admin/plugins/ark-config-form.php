@@ -27,7 +27,7 @@
     <p class="explanation">
         <?php echo __('When created, an ark is never modified, even if these parameters are changed, unless the ark is manually removed from the record.'); ?>
     </p>
-    <div class="field">    <div class="field">
+    <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_format_name', __('Format of name')); ?>
         </div>
@@ -140,7 +140,7 @@
             </p>
         </div>
     </div>
-    <div class="field">    <div class="field">
+    <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_options', __('Other options')); ?>
         </div>

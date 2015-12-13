@@ -17,8 +17,11 @@ class Ark_Name_Noid extends Ark_Name_Abstract
     protected function _noid()
     {
         $command = $this->_getParameter('ark_options');
+        $status = null;
+        $output = null;
+        $errors = null;
 
-        $this->_executeCommand($cmd, $status, $output, $errors);
+        $this->_executeCommand($command, $status, $output, $errors);
 
         if (!empty($errors)) {
             _log(__('Error output from ark command:\n%s', $errors), Zend_Log::WARN);
