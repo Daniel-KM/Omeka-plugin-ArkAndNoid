@@ -150,8 +150,8 @@ where: http://example.com/ark:/99999/',
             'command' => $post['ark_command'],
             // This value is used only to check if a zero may be prepended for
             // collections with the Omeka Id format.
-            'identifix' => $post['prefix_collection'] === $post['prefix_item']
-                && $post['suffix_collection'] === $post['suffix_item'],
+            'identifix' => $post['ark_prefix_collection'] === $post['ark_prefix_item']
+                && $post['ark_suffix_collection'] === $post['ark_suffix_item'],
         );
 
         try {

@@ -45,6 +45,7 @@
     </p>
     <p class="explanation">
         <?php echo __('Prefixes and suffixes are a single character or a short string to prepend or to append to the main part.'); ?>
+        <?php echo __('When set, the length should be set too.'); ?>
     </p>
     <p class="explanation">
         <strong><?php echo __('Warning:'); ?></strong>
@@ -67,9 +68,6 @@
         </div>
         <div class='inputs five columns omega'>
             <?php echo $this->formText('ark_prefix_collection', get_option('ark_prefix_collection'), null); ?>
-            <p>
-                <?php echo __('When prefixes and suffixes of collections and items are the same, the first letter of the alphabet is automatically prepended to the collection name, when needed.'); ?>
-            </p>
         </div>
     </div>
     <div class="field">
@@ -78,17 +76,17 @@
         </div>
         <div class='inputs five columns omega'>
             <?php echo $this->formText('ark_prefix_item', get_option('ark_prefix_item'), null); ?>
+            <p>
+                <?php echo __('When prefixes and suffixes of collections and items are the same, the first letter of the alphabet is automatically prepended to the collection name, when needed.'); ?>
+            </p>
         </div>
     </div>
-    <p class="explanation">
-        <?php echo __('When a suffix is set, the length should be set too.'); ?>
-    </p>
     <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_suffix', __('Main suffix')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_suffix_collection', get_option('ark_suffix_collection'), null); ?>
+            <?php echo $this->formText('ark_suffix', get_option('ark_suffix'), null); ?>
         </div>
     </div>
     <div class="field">
