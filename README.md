@@ -11,6 +11,13 @@ reference to the Noah's ark (digital documents will have a long life) and to the
 world of archives (Omeka can be an institutional archive) too. Optionally, the
 identifiers can be resolved via a service as [N2T], the Name-to-Thing Resolver.
 
+See a living example in the [Bibliothèque patrimoniale] of [Mines ParisTech]
+(click on "Notice" to display the record of any document).
+
+
+Presentation of Ark
+-------------------
+
 A full ark looks like (official example):
 
 ```
@@ -97,17 +104,16 @@ saved.
 
 Because an ark should be persistent, if an ark exists already, it will never be
 removed or modified automatically. Nevertheless, if it is removed, a new one
-will be created according to the specified scheme.
+will be created according to the specified scheme. Note that the default
+internal format create unique ids based on the Omeka id, so the same is created
+if the parameters are the same.
 
 To set arks to existing records, simply select them in admin/items/browse and
 batch edit them, without any change.
 
-Currently, no check is done on the uniqueness of an ark, but default formats
-create unique ids, because they are based on the Omeka id.
-
 ** IMPORTANT **
 
-It's not recommended to change parameters once records are public, in order to
+It's not recommended to change parameters once records are public in order to
 keep the consistency and the sustainability of the archive.
 
 
@@ -156,11 +162,13 @@ Current maintainers:
 
 * Daniel Berthereau (see [Daniel-KM] on GitHub)
 
+Second version of this plugin has been built for [Mines ParisTech].
+
 
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015
+* Copyright Daniel Berthereau, 2015-2016
 
 
 [Ark]: https://github.com/Daniel-KM/ArkForOmeka
@@ -168,6 +176,8 @@ Copyright
 [ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
 [Cool URIs]: https://www.w3.org/TR/cooluris
 [N2T]: http://n2t.org
+[Bibliothèque patrimoniale]: https://patrimoine.mines-paristech.fr
+[Mines ParisTech]: http://mines-paristech.fr
 [California Digital Library]: http://www.cdlib.org
 [NOID]: https://metacpan.org/pod/distribution/Noid/noid
 [PURL]: https://purl.org

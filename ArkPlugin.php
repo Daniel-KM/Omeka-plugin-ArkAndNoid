@@ -4,7 +4,7 @@
  *
  * Creates and manages unique, universel and persistent ark identifiers.
  *
- * @copyright Daniel Berthereau, 2015
+ * @copyright Daniel Berthereau, 2015-2016
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
  */
 
@@ -65,10 +65,10 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_policy_statement' => 'erc-support:
 who: Our Institution
 what: Permanent: Stable Content:
-when: 20150101
-where: http://example.com/ark:/12345/',
+when: 20160101
+where: http://example.com/ark:/99999/',
         // From the policy statement of the California Digital Library.
-        'ark_policy_main' => 'Our institution assigns identifiers within the ARK domain under the NAAN 12345 and according to the following principles:
+        'ark_policy_main' => 'Our institution assigns identifiers within the ARK domain under the NAAN 99999 and according to the following principles:
 
 * No ARK shall be re-assigned; that is, once an ARK-to-object association has been made public, that association shall be considered unique into the indefinite future.
 * To help them age and travel well, the Name part of our institution-assigned ARKs shall contain no widely recognizable semantic information (to the extent possible).
