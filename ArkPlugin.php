@@ -133,6 +133,33 @@ where: http://example.com/ark:/12345/',
     {
         $post = $args['post'];
 
+        // Special check for prefix/suffix.
+        $format = $post['ark_format_name'];
+
+        // Check the parameters for the format.
+        $format = $post['ark_format_name'];
+        $parameters = array(
+            'naan' => $post['ark_naan'],
+            'prefix' => $post['ark_prefix'] . $post['ark_prefix_collection'] . $post['ark_prefix_item'],
+            'suffix' => $post['ark_suffix'] . $post['ark_suffix_collection'] . $post['ark_suffix_item'],
+            'length' => $post['ark_length'],
+            'pad' => $post['ark_pad'],
+            'salt' => $post['ark_salt'],
+            'alphabet' => $post['ark_alphabet'],
+            'control_key' => $post['ark_control_key'],
+            'command' => $post['ark_command'],
+            // This value is used only to check if a zero may be prepended for
+            // collections with the Omeka Id format.
+            'identifix' => $post['prefix_collection'] === $post['prefix_item']
+                && $post['suffix_collection'] === $post['suffix_item'],
+        );
+
+        try {
+            $processor = $this->_getArkProcessor($format, null, $parameters);
+        } catch (Ark_ArkException $e) {
+            throw new Omeka_Validate_Exception($e->getMessage());
+        }
+
         // Save the previous salt if needed.
         $salt = get_option('ark_salt');
         $previousSalts = get_option('ark_previous_salts');
@@ -147,14 +174,6 @@ where: http://example.com/ark:/12345/',
         $newSalt = get_option('ark_salt');
         if ($newSalt !== $salt && strlen($newSalt) > 0) {
             set_option('ark_previous_salts', $previousSalts . PHP_EOL . $newSalt);
-        }
-
-        // Check the parameters for the format.
-        $format = get_option('ark_format_name');
-        try {
-            $ark = $this->_getArkProcessor($format, null);
-        } catch (Ark_ArkException $e) {
-            throw new Omeka_Validate_Exception($e->getMessage());
         }
     }
 
@@ -393,7 +412,7 @@ where: http://example.com/ark:/12345/',
      * @param string|null $recordType
      * @return Ark_Name class.
      */
-    protected function _getArkProcessor($format, $recordType = null)
+    protected function _getArkProcessor($format, $recordType = null, $parameters = array())
     {
         $formats = apply_filters('ark_format_names', array());
 
@@ -407,28 +426,43 @@ where: http://example.com/ark:/12345/',
             throw new Ark_ArkException(__('Ark class "%s" is missing.', $class));
         }
 
-        // A check is automatically done internally.
-        if (is_null($recordType)) {
-            $prefix = get_option('ark_prefix') . get_option('ark_prefix_collection') . get_option('ark_prefix_item') ;
-            $suffix = get_option('ark_suffix') . get_option('ark_suffix_collection') . get_option('ark_suffix_item');
-        }
-        // Adding an ark to a specific record.
-        else {
-            $recordType = strtolower($recordType);
-            $prefix = get_option('ark_prefix') . get_option('ark_prefix_' . $recordType);
-            $suffix = get_option('ark_suffix') . get_option('ark_suffix_' . $recordType);
+        if (empty($parameters)) {
+            // A check is automatically done internally.
+            if (is_null($recordType)) {
+                $prefix = get_option('ark_prefix') . get_option('ark_prefix_collection') . get_option('ark_prefix_item') ;
+                $suffix = get_option('ark_suffix') . get_option('ark_suffix_collection') . get_option('ark_suffix_item');
+            }
+            // Adding an ark to a specific record.
+            else {
+                $recordType = strtolower($recordType);
+                $prefix = get_option('ark_prefix') . get_option('ark_prefix_' . $recordType);
+                $suffix = get_option('ark_suffix') . get_option('ark_suffix_' . $recordType);
+            }
+
+            $identifix = get_option('ark_prefix_collection') === get_option('ark_prefix_item')
+                && get_option('ark_suffix_collection') === get_option('ark_suffix_item');
+
+            $parameters = array(
+                'naan' => get_option('ark_naan'),
+                'prefix' => $prefix,
+                'suffix' => $suffix,
+                'length' => get_option('ark_length'),
+                'pad' => get_option('ark_pad'),
+                'salt' => get_option('ark_salt'),
+                'alphabet' => get_option('ark_alphabet'),
+                'control_key' => get_option('ark_control_key'),
+                'command' => get_option('ark_command'),
+                // This value is used only to check if a zero may be prepended
+                // for collections with the Omeka Id format.
+                'identifix' => $identifix,
+            );
         }
 
-        return new $class(array(
-            'naan' => get_option('ark_naan'),
-            'prefix' => $prefix,
-            'suffix' => $suffix,
-            'length' => get_option('ark_length'),
-            'pad' => get_option('ark_pad'),
-            'salt' => get_option('ark_salt'),
-            'alphabet' => get_option('ark_alphabet'),
-            'control_key' => get_option('ark_control_key'),
-            'command' => get_option('ark_command'),
-        ));
+        try {
+            $arkProcessor = new $class($parameters);
+        } catch (Ark_ArkException $e) {
+            throw new Ark_ArkException(__('Parameters are incorrect: %s', $e->getMessage()));
+        }
+        return $arkProcessor;
     }
 }

@@ -6,17 +6,15 @@
  */
 abstract class Ark_Name_Abstract
 {
+    /**
+     * @var array
+     */
     protected $_parameters;
 
-    protected $_record;
-
     /**
-     * When a salt and a length are set, the result may be cut and the process
-     * may need to be relaunched.
-     *
-     * @var integer
+     * @var Record
      */
-    protected $_maxSaltLoop = 4000;
+    protected $_record;
 
     /**
      * This option specifies if the processor return a full ark, with naan,
@@ -27,14 +25,17 @@ abstract class Ark_Name_Abstract
     protected $_isFullArk = false;
 
     /**
-     * When name is static (derived from the id), a collision can occurs for
-     * collection and item if they use the same prefix and suffix. In that case,
-     * a "0" is prepended for collection and the padding to a specified length
-     * is not possible.
+     * When a salt and a length are set, the result may be cut and the process
+     * may need to be relaunched.
      *
-     * @var boolean
+     * @var integer
      */
-    protected $_addZero = null;
+    protected $_maxSaltLoop = 4000;
+
+    /**
+     * @var string
+     */
+    protected $_errorMessage = '';
 
     public function __construct($parameters = array())
     {
@@ -233,22 +234,6 @@ abstract class Ark_Name_Abstract
     }
 
     /**
-     * Determine if a zero should be added for collections.
-     *
-     * @see self::_addZero
-     *
-     * @return boolean.
-     */
-    protected function _addZeroForCollection()
-    {
-        if (is_null($this->_addZero)) {
-            $this->_addZero = get_option('ark_prefix_collection') == get_option('ark_prefix_item')
-                && get_option('ark_suffix_collection') == get_option('ark_suffix_item');
-        }
-        return $this->_addZero;
-    }
-
-    /**
      * Check and pad a string to the configured length.
      *
      * @param string $string
@@ -256,20 +241,19 @@ abstract class Ark_Name_Abstract
      */
     protected function _pad($string)
     {
-        if (!$this->_addZero) {
-            $length = $this->_getParameter('length');
-            if ($length) {
-                // Check if the string is longer to warn it in the log.
-                if (strlen($string) > $length) {
-                    $message = __('The Ark format "%s" requires a static length of %d characters, but the current ark is %d characters long [%s #%d].',
-                        get_class($this), $length, strlen($string), get_class($this->_record), $this->_record->id);
-                    _log('[Ark] ' . $message, Zend_Log::WARN);
-                    return $string;
-                }
-                $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
-                $string = str_pad($string, $length, $pad, STR_PAD_LEFT);
+        $length = $this->_getParameter('length');
+        if ($length) {
+            // Check if the string is longer to warn it in the log.
+            if (strlen($string) > $length) {
+                $message = __('The Ark format "%s" requires a static length of %d characters, but the current ark is %d characters long [%s #%d].',
+                    get_class($this), $length, strlen($string), get_class($this->_record), $this->_record->id);
+                _log('[Ark] ' . $message, Zend_Log::WARN);
+                return $string;
             }
+            $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
+            $string = str_pad($string, $length, $pad, STR_PAD_LEFT);
         }
+
         return $string;
     }
 

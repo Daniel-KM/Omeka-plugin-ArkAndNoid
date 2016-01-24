@@ -6,31 +6,33 @@
  */
 class Ark_Name_OmekaId extends Ark_Name_Abstract
 {
-    public function __construct($parameters = array())
-    {
-        $this->_addZeroForCollection();
-
-        parent::__construct($parameters);
-    }
-
     protected function _create()
     {
         $record = &$this->_record;
 
-        switch (get_class($record)) {
-            case 'Collection':
-                $main = $this->_addZero . $this->_convertIntegerToAlphabet($record->id);
-                break;
-            case 'Item':
-                $main = $this->_convertIntegerToAlphabet($record->id);
-                break;
+        $main = $this->_convertIntegerToAlphabet($record->id);
+
+        // To set a different ark for collections and items, a "0" may be
+        // prepended before process when there is a salt, else after.
+        $recordType = get_class($record);
+
+        // Add the prepend before salting.
+        $salt = $this->_getParameter('salt');
+        if (strlen($salt) > 0) {
+            // The record type is always added to simplify process.
+            $main = $recordType . ' ' . $main;
+
+            // The salt process uses length and alphabet, so no more padding.
+            $result = $this->_salt($main);
         }
 
-        $salted = $this->_salt($main);
-        // Check if string is salted: the salt process uses length and alphabet.
-        $result = $salted == $main
-            ? $this->_pad($main)
-            : $salted;
+        // Not salt.
+        else {
+            $result = $this->_pad($main);
+            if ($recordType == 'Collection' && $this->_getParameter('identifix')) {
+                $result = substr($this->_getAlphabet(), 0, 1) . $result;
+            }
+        }
 
         return $result;
     }
@@ -47,13 +49,12 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
         // The salt process builds a code of 256 bits.
         $salt = $this->_getParameter('salt');
         if ($salt) {
-            if ($length > 32) {
-                $this->_errorMessage = __('When a salt is set, the length should be empty or lower than 32.');
+            // In fact, depends on the alphabet.
+            if ($length > 16) {
+                $this->_errorMessage = __('When a salt is set, the length should be empty or lower than 16.');
                 return false;
             }
         }
-
-        //préfix set : soit fixe soit lenght et pas dans l'alphabet
 
         $prefix = $this->_getParameter('prefix');
         if ($prefix) {
@@ -79,12 +80,27 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
             }
         }
 
-        if ($this->_addZero) {
-            if ($length) {
-                $this->_errorMessage = __('With the format Omeka Id, the length should be used when the prefix and the suffix are the same for collections and items.');
-                return false;
+        $identifix = $this->_getParameter('identifix');
+        if (!$salt) {
+            if ($identifix) {
+                // This is just a warn: the parameters are fine because a prepend
+                // is automatically added.
+                $prepend = substr($this->_getAlphabet(), 0, 1);
+                $this->_errorMessage = __('When the prefixes and the suffixes are the same for collections and items, without salt, a "%s" is prepended for collections.',
+                    $prepend);
+            }
+            $this->_errorMessage .= PHP_EOL . __('Without salt, some checks need to be done manually: the prepended prefix of the collection should be different than the prefix of the item.');
+        }
+
+        /* This can't be done, because the options and the alphabet are not set.
+        $salt = $this->_getParameter('salt');
+        if (empty($salt)) {
+            $prepend = substr($this->_getAlphabet(), 0, 1);
+            if ((get_option('ark_prefix_collection') . $prepend) == get_option('ark_prefix_item')) {
+                $this->_errorMessage = __('The prefix of the collection cannot be near the prefix of the item.');
             }
         }
+        */
 
         return true;
     }
