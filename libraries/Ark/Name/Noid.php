@@ -8,7 +8,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
 {
     protected $_isFullArk = true;
 
-    protected function _create($record)
+    protected function _create()
     {
         // Record is not used for noid. Extends the class if needed.
         return $this->_noid();

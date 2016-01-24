@@ -109,6 +109,18 @@
                 <?php echo __('The length of the name (main part of the identifier, without prefix, suffix and control key).'); ?>
                 <?php echo __('A length of three alphanumeric characters is enough to create 200000 arks.'); ?>
                 <?php echo __('A length of four lower-case alphanumeric characters is enough to create more than 1000000 arks.'); ?>
+                <?php echo __("If the format creates a longer name, it won't be cut."); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_pad', __('Pad to prepend')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_pad', get_option('ark_pad'), null); ?>
+            <p class="explanation">
+                <?php echo __('The string pad to use when a specific length is required (generally "0").'); ?>
             </p>
         </div>
     </div>

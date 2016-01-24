@@ -50,6 +50,7 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_suffix_item' => '',
         'ark_control_key' => true,
         'ark_length' => '',
+        'ark_pad' => '0',
         'ark_alphabet' => 'alphanumeric_no_vowel',
         'ark_command' => '',
         'ark_format_qualifier' => 'order',
@@ -123,6 +124,14 @@ where: http://example.com/ark:/12345/',
                 set_option($optionKey, $post[$optionKey]);
             }
         }
+
+        // Check the parameters for the format.
+        $format = get_option('ark_format_name');
+        try {
+            $ark = $this->_getArkProcessor($format);
+        } catch (Ark_ArkException $e) {
+            throw new Omeka_Validate_Exception($e->getMessage());
+        }
     }
 
     /**
@@ -172,29 +181,16 @@ where: http://example.com/ark:/12345/',
         // Check if an ark exists (no automatic change or update), else create.
         $ark = get_view()->ark($record);
         if (empty($ark)) {
-            $formats = apply_filters('ark_format_names', array());
-
-            // Check the selected format (avoid issue for extra plugin class).
             $format = get_option('ark_format_name');
-            if (!isset($formats[$format])) {
-                throw new Ark_ArkException(__('Ark format for names "%s" is missing.', $format));
-            }
-            $class = $formats[$format]['class'];
-            if (!class_exists($class)) {
-                 throw new Ark_ArkException(__('Ark class "%s" is missing.', $class));
-            }
-
             $recordType = get_class($record);
 
-            $ark = new $class(array(
-                'naan' => get_option('ark_naan'),
-                'prefix' => get_option('ark_prefix_' . strtolower($recordType)),
-                'suffix' => get_option('ark_suffix_' . strtolower($recordType)),
-                'control_key' => get_option('ark_control_key'),
-                'length' => get_option('ark_length'),
-                'alphabet' => get_option('ark_alphabet'),
-                'command' => get_option('ark_command'),
-            ));
+            try {
+                $ark = $this->_getArkProcessor($format, $recordType);
+            } catch (Ark_ArkException $e) {
+                _log('[Ark] ' . __($e->getMessage()));
+                throw $e;
+            }
+
             $ark = $ark->create($record);
             if ($ark) {
                 $element = $record->getElement('Dublin Core', 'Identifier');
@@ -318,5 +314,39 @@ where: http://example.com/ark:/12345/',
         $display = isset($args['display']) ? $args['display'] : null;
 
         return $view->ark($record, $display);
+    }
+
+    /**
+     * Return the selected processor or throw an error.
+     *
+     * @param string $format
+     * @param string $recordType
+     * @return Ark_Name class.
+     */
+    protected function _getArkProcessor($format, $recordType = 'Item')
+    {
+        $formats = apply_filters('ark_format_names', array());
+
+        // Check the selected format (avoid issue for extra plugin class).
+        if (!isset($formats[$format])) {
+            throw new Ark_ArkException(__('Ark format for names "%s" is missing.', $format));
+        }
+
+        $class = $formats[$format]['class'];
+        if (!class_exists($class)) {
+            throw new Ark_ArkException(__('Ark class "%s" is missing.', $class));
+        }
+
+        // A check is automatically done internally.
+        return new $class(array(
+            'naan' => get_option('ark_naan'),
+            'prefix' => get_option('ark_prefix_' . strtolower($recordType)),
+            'suffix' => get_option('ark_suffix_' . strtolower($recordType)),
+            'control_key' => get_option('ark_control_key'),
+            'length' => get_option('ark_length'),
+            'pad' => get_option('ark_pad'),
+            'alphabet' => get_option('ark_alphabet'),
+            'command' => get_option('ark_command'),
+        ));
     }
 }

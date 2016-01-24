@@ -8,6 +8,8 @@ abstract class Ark_Name_Abstract
 {
     protected $_parameters;
 
+    protected $_record;
+
     /**
      * This option specifies if the processor return a full ark, with naan,
      * prefix, name, suffix and control key.
@@ -16,9 +18,27 @@ abstract class Ark_Name_Abstract
      */
     protected $_isFullArk = false;
 
+    /**
+     * When name is static (derived from the id), a collision can occurs for
+     * collection and item if they use the same prefix and suffix. In that case,
+     * a "0" is prepended for collection and the padding to a specified length
+     * is not possible.
+     *
+     * @var boolean
+     */
+    protected $_addZero = null;
+
     public function __construct($parameters = array())
     {
         $this->_parameters = $parameters;
+
+        if (!$this->_checkParameters()) {
+            $message = __('Parameters are not correct for the selected format "%s".', get_class($this));
+            if (!empty($this->_errorMessage)) {
+                $message .= PHP_EOL . $this->_errorMessage;
+            }
+            throw new Ark_ArkException($message);
+        }
     }
 
     /**
@@ -32,6 +52,16 @@ abstract class Ark_Name_Abstract
     }
 
     /**
+     * Check parameters.
+     *
+     * @return boolean
+     */
+    protected function _checkParameters()
+    {
+        return true;
+    }
+
+    /**
      * Create the ark for a record.
      *
      * @param AbstractRecord $record The record for which to create the ark.
@@ -39,6 +69,8 @@ abstract class Ark_Name_Abstract
      */
     final public function create($record)
     {
+        $this->_record = $record;
+
         if (empty($record)) {
             return;
         }
@@ -77,7 +109,7 @@ abstract class Ark_Name_Abstract
     /**
      * The true function used to create the name part of the record.
      */
-    abstract protected function _create($record);
+    abstract protected function _create();
 
     /**
      * Return the control key of a string.
@@ -103,17 +135,44 @@ abstract class Ark_Name_Abstract
     }
 
     /**
-     * Returns '0' if the prefix and suffix are same for collections and items
-     * in order to avoid duplicate arks.
+     * Determine if a zero should be added for collections.
      *
-     * @return string "0" or empty string.
+     * @see self::_addZero
+     *
+     * @return boolean.
      */
     protected function _addZeroForCollection()
     {
-        return get_option('ark_prefix_collection') == get_option('ark_prefix_item')
-            && get_option('ark_suffix_collection') == get_option('ark_suffix_item')
-            ? '0'
-            : '';
+        if (is_null($this->_addZero)) {
+            $this->_addZero = get_option('ark_prefix_collection') == get_option('ark_prefix_item')
+                && get_option('ark_suffix_collection') == get_option('ark_suffix_item');
+        }
+        return $this->_addZero;
+    }
+
+    /**
+     * Check and pad a string to the configured length.
+     *
+     * @param string $string
+     * @return string "0" or empty string.
+     */
+    protected function _pad($string)
+    {
+        if (!$this->_addZero) {
+            $length = $this->_getParameter('length');
+            if ($length) {
+                // Check if the string is longer to warn it in the log.
+                if (strlen($string) > $length) {
+                    $message = __('The Ark format "%s" requires a static length of %d characters, but the current ark is %d characters long [%s #%d].',
+                        get_class($this), $length, strlen($string), get_class($this->_record), $this->_record->id);
+                    _log('[Ark] ' . $message, Zend_Log::WARN);
+                    return $string;
+                }
+                $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
+                $string = str_pad($string, $length, $pad, STR_PAD_LEFT);
+            }
+        }
+        return $string;
     }
 
     /**
