@@ -35,6 +35,8 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'ark_format_names',
         'ark_format_qualifiers',
+        'filterDisplayCollectionDublinCoreIdentifier' => array('Display', 'Collection', 'Dublin Core', 'Identifier'),
+        'filterDisplayItemDublinCoreIdentifier' => array('Display', 'Item', 'Dublin Core', 'Identifier'),
     );
 
     /**
@@ -73,6 +75,8 @@ where: http://example.com/ark:/12345/',
 * Our institution-assigned ARKs shall be generated with a terminal check character that guarantees them against single character errors and transposition errors.',
         'ark_use_public' => true,
         'ark_use_admin' => false,
+        'ark_display_public' => '<a href="WEB_ROOT/%1$s">%1$s</a>',
+        'ark_display_admin' => '<a href="WEB_ROOT/admin/%1$s">%1$s</a>',
     );
 
     /**
@@ -91,6 +95,8 @@ where: http://example.com/ark:/12345/',
     {
         $length = 32;
         $this->_options['ark_salt'] = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+        $this->_options['ark_display_public'] = str_replace('WEB_ROOT', WEB_ROOT, $this->_options['ark_display_public']);
+        $this->_options['ark_display_admin'] = str_replace('WEB_ROOT', WEB_ROOT, $this->_options['ark_display_admin']);
 
         $this->_installOptions();
     }
@@ -298,6 +304,56 @@ where: http://example.com/ark:/12345/',
             }
         }
         return $values;
+    }
+
+    /**
+     * Filter for metadata.
+     *
+     * @param string $text
+     * @param array $args
+     * @return string
+     */
+    public function filterDisplayCollectionDublinCoreIdentifier($text, $args)
+    {
+        return $this->_displayArkIdentifier($text, $args);
+    }
+
+    /**
+     * Filter for metadata.
+     *
+     * @param string $text
+     * @param array $args
+     * @return string
+     */
+    public function filterDisplayItemDublinCoreIdentifier($text, $args)
+    {
+        return $this->_displayArkIdentifier($text, $args);
+    }
+
+    /**
+     * Filter the ark to display an url.
+     *
+     * @param string $text
+     * @param array $args
+     * @return string The filtered ark.
+     */
+    protected function _displayArkIdentifier($text, $args)
+    {
+        $arkDisplay = is_admin_theme()
+            ? get_option('ark_display_admin')
+            :  get_option('ark_display_public');
+
+        if (empty($arkDisplay)) {
+            return $text;
+        }
+
+        // Ark is the slowest check, so it's done later.
+        $ark = get_view()->ark($args['record']);
+        if ($text != $ark) {
+            return $text;
+        }
+
+        return sprintf($arkDisplay, $text);
     }
 
     /**

@@ -310,4 +310,25 @@
             </p>
         </div>
     </div>
+    <p class="explanation">
+        <?php echo __('In the record, the metadata itself can be formatted.'); ?>
+        <?php echo __('Use any string with one or more "%1$s" for the ark itself.'); ?>
+        <?php echo __('Example: "&lt;a href="https://example.org/%1$s"&gt;%1$s&lt;/a&gt;"'); ?>
+    </p>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_display_public', __('Format in public records')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_display_public', get_option('ark_display_public'), null); ?>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_display_admin', __('Format in admin records')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_display_admin', get_option('ark_display_admin'), null); ?>
+        </div>
+    </div>
 </fieldset>
