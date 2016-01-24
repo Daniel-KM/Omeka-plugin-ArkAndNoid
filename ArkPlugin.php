@@ -44,18 +44,21 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
         'ark_format_name' => 'omeka_id',
+        'ark_prefix' => '',
         'ark_prefix_collection' => '',
-        'ark_suffix_collection' => '',
         'ark_prefix_item' => '',
+        'ark_suffix' => '',
+        'ark_suffix_collection' => '',
         'ark_suffix_item' => '',
-        'ark_control_key' => true,
         'ark_length' => 4,
         'ark_pad' => '0',
         'ark_salt' => 'RaNdOm SaLt',
         'ark_previous_salts' => '',
         'ark_alphabet' => 'alphanumeric_no_vowel',
+        'ark_control_key' => true,
         'ark_command' => '',
         'ark_format_qualifier' => 'order',
+        'ark_file_variants' => 'original fullsize thumbnail square_thumbnail',
         'ark_note' => '',
         'ark_policy_statement' => 'erc-support:
 who: Our Institution
@@ -70,7 +73,6 @@ where: http://example.com/ark:/12345/',
 * Our institution-assigned ARKs shall be generated with a terminal check character that guarantees them against single character errors and transposition errors.',
         'ark_use_public' => true,
         'ark_use_admin' => false,
-        'ark_file_variants' => 'original fullsize thumbnail square_thumbnail',
     );
 
     /**
@@ -144,7 +146,7 @@ where: http://example.com/ark:/12345/',
         // Check the parameters for the format.
         $format = get_option('ark_format_name');
         try {
-            $ark = $this->_getArkProcessor($format);
+            $ark = $this->_getArkProcessor($format, null);
         } catch (Ark_ArkException $e) {
             throw new Omeka_Validate_Exception($e->getMessage());
         }
@@ -332,10 +334,10 @@ where: http://example.com/ark:/12345/',
      * Return the selected processor or throw an error.
      *
      * @param string $format
-     * @param string $recordType
+     * @param string|null $recordType
      * @return Ark_Name class.
      */
-    protected function _getArkProcessor($format, $recordType = 'Item')
+    protected function _getArkProcessor($format, $recordType = null)
     {
         $formats = apply_filters('ark_format_names', array());
 
@@ -350,15 +352,26 @@ where: http://example.com/ark:/12345/',
         }
 
         // A check is automatically done internally.
+        if (is_null($recordType)) {
+            $prefix = get_option('ark_prefix') . get_option('ark_prefix_collection') . get_option('ark_prefix_item') ;
+            $suffix = get_option('ark_suffix') . get_option('ark_suffix_collection') . get_option('ark_suffix_item');
+        }
+        // Adding an ark to a specific record.
+        else {
+            $recordType = strtolower($recordType);
+            $prefix = get_option('ark_prefix') . get_option('ark_prefix_' . $recordType);
+            $suffix = get_option('ark_suffix') . get_option('ark_suffix_' . $recordType);
+        }
+
         return new $class(array(
             'naan' => get_option('ark_naan'),
-            'prefix' => get_option('ark_prefix_' . strtolower($recordType)),
-            'suffix' => get_option('ark_suffix_' . strtolower($recordType)),
-            'control_key' => get_option('ark_control_key'),
+            'prefix' => $prefix,
+            'suffix' => $suffix,
             'length' => get_option('ark_length'),
             'pad' => get_option('ark_pad'),
             'salt' => get_option('ark_salt'),
             'alphabet' => get_option('ark_alphabet'),
+            'control_key' => get_option('ark_control_key'),
             'command' => get_option('ark_command'),
         ));
     }
