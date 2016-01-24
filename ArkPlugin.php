@@ -150,7 +150,7 @@ where: http://example.com/ark:/12345/',
      */
     public function hookAfterSaveCollection($args)
     {
-        $this->_afterSaveRecord($args);
+        $this->_addArk($args['record']);
     }
 
     /**
@@ -158,19 +158,19 @@ where: http://example.com/ark:/12345/',
      */
     public function hookAfterSaveItem($args)
     {
-        $this->_afterSaveRecord($args);
+        $this->_addArk($args['record']);
     }
 
     /**
-     * Create or check an ark when a record is saved, with the id.
+     * Add an ark to a record, if needed.
+     *
+     * @param Record $record
+     * @return void
      */
-    protected function _afterSaveRecord($args)
+    protected function _addArk($record)
     {
-        $record = $args['record'];
-
-        // Check if an ark exists (no automatic change or update).
+        // Check if an ark exists (no automatic change or update), else create.
         $ark = get_view()->ark($record);
-        // If no ark, create one.
         if (empty($ark)) {
             $formats = apply_filters('ark_format_names', array());
 
@@ -180,15 +180,16 @@ where: http://example.com/ark:/12345/',
                 throw new Ark_ArkException(__('Ark format for names "%s" is missing.', $format));
             }
             $class = $formats[$format]['class'];
-            // TODO Check class (issue with Zend autoload).
-            // if (!class_exists($format)) {
-            //     throw new Ark_ArkException(__('Ark class "%s" is missing.', $class));
-            // }
+            if (!class_exists($class)) {
+                 throw new Ark_ArkException(__('Ark class "%s" is missing.', $class));
+            }
+
+            $recordType = get_class($record);
 
             $ark = new $class(array(
                 'naan' => get_option('ark_naan'),
-                'prefix' => get_option('ark_prefix_' . strtolower(get_class($record))),
-                'suffix' => get_option('ark_suffix' . strtolower(get_class($record))),
+                'prefix' => get_option('ark_prefix_' . strtolower($recordType)),
+                'suffix' => get_option('ark_suffix_' . strtolower($recordType)),
                 'control_key' => get_option('ark_control_key'),
                 'length' => get_option('ark_length'),
                 'alphabet' => get_option('ark_alphabet'),
@@ -197,8 +198,14 @@ where: http://example.com/ark:/12345/',
             $ark = $ark->create($record);
             if ($ark) {
                 $element = $record->getElement('Dublin Core', 'Identifier');
-                $record->addTextForElement($element, $ark, false);
-                $record->saveElementTexts();
+
+                $elementText = new ElementText();
+                $elementText->element_id = $element->id;
+                $elementText->record_type = $recordType;
+                $elementText->record_id = $record->id;
+                $elementText->html = false;
+                $elementText->setText($ark);
+                $elementText->save();
             }
         }
     }
