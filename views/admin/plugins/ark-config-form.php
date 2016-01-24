@@ -109,7 +109,7 @@
                 <?php echo __('The length of the name (main part of the identifier, without prefix, suffix and control key).'); ?>
                 <?php echo __('A length of three alphanumeric characters is enough to create 200000 arks.'); ?>
                 <?php echo __('A length of four lower-case alphanumeric characters is enough to create more than 1000000 arks.'); ?>
-                <?php echo __("If the format creates a longer name, it won't be cut."); ?>
+                <?php echo __("If the format creates a longer name, it won't be cut, except if it is hashed."); ?>
             </p>
         </div>
     </div>
@@ -131,12 +131,32 @@
     </p>
     <div class="field">
         <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_salt', __('Salt to add')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_salt', get_option('ark_salt'), null); ?>
+            <p class="explanation">
+                <?php echo __('A salt can be used to randomize the ark.'); ?>
+                <?php echo __('It is recommended to set a long meaningless string.'); ?>
+                <?php echo __('Leave empty to not use one.'); ?>
+                <?php $previousSalts = get_option('ark_previous_salts');
+                    if ($previousSalts) {
+                        echo __('Last salts:');
+                        echo '<ul><li>' . str_replace(PHP_EOL, '</li><li>', $previousSalts) . '</li></ul>';
+                    }
+                ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
             <?php echo $this->formLabel('ark_alphabet', __('Alphabet')); ?>
         </div>
         <div class='inputs five columns omega'>
             <?php
             $options = array(
                 'numeric' => __('Numeric'),
+                'hexadecimal' => __('Hexadecimal'),
                 'alphabetic' => __('Alphabetic'),
                 'lower_case_alphabetic' => __('Lower case alphabetic'),
                 'upper_case_alphabetic' => __('Upper case alphabetic'),

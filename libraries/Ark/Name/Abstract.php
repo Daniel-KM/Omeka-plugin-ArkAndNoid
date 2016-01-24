@@ -58,6 +58,15 @@ abstract class Ark_Name_Abstract
      */
     protected function _checkParameters()
     {
+        // The salt process builds a code of 256 bits.
+        $salt = $this->_getParameter('salt');
+        if ($salt) {
+            $length = $this->_getParameter('length');
+            if ($length > 32) {
+                $this->_errorMessage = __('When a salt is set, the option "Length" should be empty or lower than 32.');
+                return false;
+            }
+        }
         return true;
     }
 
@@ -176,6 +185,42 @@ abstract class Ark_Name_Abstract
     }
 
     /**
+     * Hash a string with a salt with main parameters (length and alphabet).
+     *
+     * @param string $string
+     * @return string The original string if there is no salt, else the salted
+     * formatted string.
+     */
+    protected function _salt($string)
+    {
+        $salt = $this->_getParameter('salt');
+        if (strlen($salt) == 0) {
+            return $string;
+        }
+        $salted = hash('sha256', $string . $salt);
+
+        // Convert the salt into the alphabet.
+        $salted = $this->_convBase($salted, '0123456789abcdef', $this->_getAlphabet());
+
+        // Pad the result.
+        $padded = $this->_pad($salted);
+        if (strlen($padded) > strlen($salted)) {
+            $message = __('The length of the format (%d characters) is too long for the salt (%d characters) [%s #%d].',
+                strlen($padded), strlen($salted), get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::WARN);
+            return $padded;
+        }
+
+        // With salt, the result may be cut, as recommended.
+        $length = $this->_getParameter('length');
+        if ($length) {
+            $salted = substr($salted, 0, $length);
+        }
+
+        return $salted;
+    }
+
+    /**
      * Convert an integer to the alphabet base.
      *
      * @param integer $number Input number to convert as a string.
@@ -240,12 +285,21 @@ abstract class Ark_Name_Abstract
 
     /**
      * Returns the alphabet used by some formats.
+     *
+     * @param string $name
+     * @return string
      */
-    protected function _getAlphabet()
+    protected function _getAlphabet($name = null)
     {
-        switch ($this->_getParameter('alphabet')) {
+        if (is_null($name)) {
+            $name = $this->_getParameter('alphabet');
+        }
+
+        switch ($name) {
             case 'numeric':
                 return '0123456789';
+            case 'hexadecimal':
+                return '0123456789abcdef';
             case 'alphabetic':
                 return 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             case 'lower_case_alphabetic':

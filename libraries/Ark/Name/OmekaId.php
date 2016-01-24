@@ -26,9 +26,13 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
                 break;
         }
 
-        $main = $this->_pad($main);
+        $salted = $this->_salt($main);
+        // Check if string is salted: the salt process uses length and alphabet.
+        $result = $salted == $main
+            ? $this->_pad($main)
+            : $salted;
 
-        return $main;
+        return $result;
     }
 
     /**
@@ -45,6 +49,7 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
                 return false;
             }
         }
-        return true;
+
+        return parent::_checkParameters();
     }
 }

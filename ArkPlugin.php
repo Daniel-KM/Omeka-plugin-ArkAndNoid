@@ -51,6 +51,8 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_control_key' => true,
         'ark_length' => '',
         'ark_pad' => '0',
+        'ark_salt' => 'RaNdOm SaLt',
+        'ark_previous_salts' => '',
         'ark_alphabet' => 'alphanumeric_no_vowel',
         'ark_command' => '',
         'ark_format_qualifier' => 'order',
@@ -85,6 +87,9 @@ where: http://example.com/ark:/12345/',
      */
     public function hookInstall()
     {
+        $length = 32;
+        $this->_options['ark_salt'] = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+
         $this->_installOptions();
     }
 
@@ -119,10 +124,21 @@ where: http://example.com/ark:/12345/',
     public function hookConfig($args)
     {
         $post = $args['post'];
+
+        // Save the previous salt if needed.
+        $salt = get_option('ark_salt');
+        $previousSalts = get_option('ark_previous_salts');
+
         foreach ($this->_options as $optionKey => $optionValue) {
             if (isset($post[$optionKey])) {
                 set_option($optionKey, $post[$optionKey]);
             }
+        }
+
+        // Save the previous salt if needed.
+        $newSalt = get_option('ark_salt');
+        if ($newSalt !== $salt && strlen($newSalt) > 0) {
+            set_option('ark_previous_salts', $previousSalts . PHP_EOL . $newSalt);
         }
 
         // Check the parameters for the format.
@@ -345,6 +361,7 @@ where: http://example.com/ark:/12345/',
             'control_key' => get_option('ark_control_key'),
             'length' => get_option('ark_length'),
             'pad' => get_option('ark_pad'),
+            'salt' => get_option('ark_salt'),
             'alphabet' => get_option('ark_alphabet'),
             'command' => get_option('ark_command'),
         ));
