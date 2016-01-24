@@ -1,4 +1,4 @@
-<p>
+<p class="explanation">
 <?php
     echo __('Ark allows to creates and manages unique, universel and persistent ark identifiers.') . '<br />';
     echo __('See %s and %sthe official help%s for more informations.',
@@ -6,8 +6,9 @@
         '<a href="https://confluence.ucop.edu/display/Curation/ARK">', '</a>');
 ?>
 </p>
-<p><strong><?php echo __('Warning'); ?></strong>
+<p class="explanation"><strong><?php echo __('Warning'); ?></strong>
     <?php echo __('Once set and arks made public, it is not recommended to change these parameters in order to keep the consistency and the sustainability of the names.'); ?>
+    <?php echo __('Anyway, once created, an ark is never modified, even if these parameters are changed, unless the ark is manually removed from the record.'); ?>
 </p>
 <fieldset id="fieldset-ark-institution"><legend><?php echo __('Institution'); ?></legend>
     <div class="field">
@@ -23,10 +24,7 @@
         </div>
     </div>
 </fieldset>
-<fieldset id="fieldset-ark"><legend><?php echo __('Identifiers'); ?></legend>
-    <p class="explanation">
-        <?php echo __('When created, an ark is never modified, even if these parameters are changed, unless the ark is manually removed from the record.'); ?>
-    </p>
+<fieldset id="fieldset-ark-format"><legend><?php echo __('Identifier'); ?></legend>
     <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_format_name', __('Format of name')); ?>
@@ -40,8 +38,10 @@
             </p>
         </div>
     </div>
-    <p>
-        <?php echo __('Below parameters can be used by some formats.'); ?>
+</fieldset>
+<fieldset id="fieldset-ark-common-options"><legend><i><?php echo __('Common Parameters'); ?></i></legend>
+    <p class="explanation">
+        <?php echo __('These parameters are used by all internal formats.'); ?>
     </p>
     <div class="field">
         <div class="two columns alpha">
@@ -101,17 +101,22 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_length', __('Length of the identifier')); ?>
+            <?php echo $this->formLabel('ark_length', __('Length of the name')); ?>
         </div>
         <div class='inputs five columns omega'>
             <?php echo $this->formText('ark_length', get_option('ark_length'), null); ?>
             <p class="explanation">
-                <?php echo __('The length of the identifier (without prefix, suffix and control key).'); ?>
+                <?php echo __('The length of the name (main part of the identifier, without prefix, suffix and control key).'); ?>
                 <?php echo __('A length of three alphanumeric characters is enough to create 200000 arks.'); ?>
                 <?php echo __('A length of four lower-case alphanumeric characters is enough to create more than 1000000 arks.'); ?>
             </p>
         </div>
     </div>
+</fieldset>
+<fieldset id="fieldset-ark-specific-options"><legend><i><?php echo __('Specific Parameters'); ?></i></legend>
+    <p class="explanation">
+        <?php echo __('These parameters are used only by some internal formats.'); ?>
+    </p>
     <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_alphabet', __('Alphabet')); ?>
@@ -140,16 +145,20 @@
             </p>
         </div>
     </div>
+</fieldset>
+<fieldset id="fieldset-ark-external-options"><legend><i><?php echo __('External Formats'); ?></i></legend>
+    <p class="explanation">
+        <?php echo __('External formats may or may not use other parameters.' ); ?>
+    </p>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_options', __('Other options')); ?>
+            <?php echo $this->formLabel('ark_command', __('External command')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_options', get_option('ark_options'), null); ?>
+            <?php echo $this->formText('ark_command', get_option('ark_command'), null); ?>
             <p class="explanation">
-                <?php echo __('These options will be passed to the name processor.'); ?>
-                <?php echo __('To use an external command, the full command should be set as an option below.'); ?>
-                <?php echo __('For example, for Noid, the command can be : "/usr/bin/noid mint 1".'); ?>
+                <?php echo __('This parameter will be passed to the external processor.'); ?>
+                <?php echo __('For the NOID format, this is an external command (generally "/usr/bin/noid mint 1") and none of the parameters above is passed.'); ?>
             </p>
         </div>
     </div>

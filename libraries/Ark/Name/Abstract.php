@@ -8,8 +8,12 @@ abstract class Ark_Name_Abstract
 {
     protected $_parameters;
 
-    // This option specifies if the processor return a full ark, with naan,
-    // prefix, name, suffix and control key.
+    /**
+     * This option specifies if the processor return a full ark, with naan,
+     * prefix, name, suffix and control key.
+     *
+     * @var boolean
+     */
     protected $_isFullArk = false;
 
     public function __construct($parameters = array())
@@ -44,7 +48,7 @@ abstract class Ark_Name_Abstract
             return;
         }
 
-        // Create a full ark.
+        // Create a full ark (in particular via noid).
         if ($this->_isFullArk) {
             $ark = $this->_create($record);
             if ($ark) {
@@ -73,9 +77,7 @@ abstract class Ark_Name_Abstract
     /**
      * The true function used to create the name part of the record.
      */
-    protected function _create($record)
-    {
-    }
+    abstract protected function _create($record);
 
     /**
      * Return the control key of a string.
@@ -104,7 +106,7 @@ abstract class Ark_Name_Abstract
      * Returns '0' if the prefix and suffix are same for collections and items
      * in order to avoid duplicate arks.
      *
-     * @return string "0" or emptystring.
+     * @return string "0" or empty string.
      */
     protected function _addZeroForCollection()
     {
@@ -131,8 +133,8 @@ abstract class Ark_Name_Abstract
      * @link https://php.net/manual/en/function.base-convert.php#106546
      *
      * @param integer $number Input number to convert as a string.
-     * @param string $fromBaseInput base of the number to convert as a string.
-     * @param string $toBaseInput base the number should be converted to as a
+     * @param string $fromBaseInput Base of the number to convert as a string.
+     * @param string $toBaseInput Base the number should be converted to as a
      * string.
      * @return string
      */

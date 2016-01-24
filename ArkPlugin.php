@@ -48,10 +48,10 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_suffix_collection' => '',
         'ark_prefix_item' => '',
         'ark_suffix_item' => '',
-        'ark_control_key' => '',
-        'ark_length' => 4,
+        'ark_control_key' => true,
+        'ark_length' => '',
         'ark_alphabet' => 'alphanumeric_no_vowel',
-        'ark_options' => '',
+        'ark_command' => '',
         'ark_format_qualifier' => 'order',
         'ark_note' => '',
         'ark_policy_statement' => 'erc-support:
@@ -193,7 +193,7 @@ where: http://example.com/ark:/12345/',
                 'control_key' => get_option('ark_control_key'),
                 'length' => get_option('ark_length'),
                 'alphabet' => get_option('ark_alphabet'),
-                'options' => get_option('ark_options'),
+                'command' => get_option('ark_command'),
             ));
             $ark = $ark->create($record);
             if ($ark) {
