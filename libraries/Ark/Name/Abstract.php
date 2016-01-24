@@ -66,15 +66,6 @@ abstract class Ark_Name_Abstract
      */
     protected function _checkParameters()
     {
-        // The salt process builds a code of 256 bits.
-        $salt = $this->_getParameter('salt');
-        if ($salt) {
-            $length = $this->_getParameter('length');
-            if ($length > 32) {
-                $this->_errorMessage = __('When a salt is set, the option "Length" should be empty or lower than 32.');
-                return false;
-            }
-        }
         return true;
     }
 

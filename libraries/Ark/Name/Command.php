@@ -1,20 +1,20 @@
 <?php
 /**
- * Noid format for Ark name.
+ * External command format for Ark name.
  *
  * @package Ark
  */
-class Ark_Name_Noid extends Ark_Name_Abstract
+class Ark_Name_Command extends Ark_Name_Abstract
 {
     protected $_isFullArk = true;
 
     protected function _create()
     {
-        // Record is not used for noid. Extends the class if needed.
-        return $this->_noid();
+        // Record and parameters are not used. Extend the class if needed.
+        return $this->_command();
     }
 
-    protected function _noid()
+    protected function _command()
     {
         $command = $this->_getParameter('command');
         $status = null;
@@ -24,7 +24,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
         $this->_executeCommand($command, $status, $output, $errors);
 
         if (!empty($errors)) {
-            _log('[Ark] ' . __('Error output from ark command:\n%s', $errors), Zend_Log::WARN);
+            _log('[Ark] ' . __('Error output from ark command: %s', $errors), Zend_Log::WARN);
         }
 
         if ($status) {

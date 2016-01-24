@@ -43,13 +43,13 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_options = array(
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
-        'ark_format_name' => 'base',
+        'ark_format_name' => 'omeka_id',
         'ark_prefix_collection' => '',
         'ark_suffix_collection' => '',
         'ark_prefix_item' => '',
         'ark_suffix_item' => '',
         'ark_control_key' => true,
-        'ark_length' => '',
+        'ark_length' => 4,
         'ark_pad' => '0',
         'ark_salt' => 'RaNdOm SaLt',
         'ark_previous_salts' => '',
@@ -235,13 +235,9 @@ where: http://example.com/ark:/12345/',
             'class' => 'Ark_Name_OmekaId',
             'description' => __('Omeka Id'),
         );
-        $formatNames['base'] = array(
-            'class' => 'Ark_Name_Base',
-            'description' => __('Base change'),
-        );
-        $formatNames['noid'] = array(
-            'class' => 'Ark_Name_Noid',
-            'description' => __('NOID ("nice opaque identifiers", if installed)'),
+        $formatNames['command'] = array(
+            'class' => 'Ark_Name_Command',
+            'description' => __('Command, like NOID'),
         );
         return $formatNames;
     }
