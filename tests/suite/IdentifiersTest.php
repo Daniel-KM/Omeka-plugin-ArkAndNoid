@@ -8,9 +8,25 @@ class Ark_IdentifiersTest extends Ark_Test_AppTestCase
     {
         $arkAndTitles = array(
             'ark:/12345/c01' => 'Title of Collection #1',
-            // This ark is automatically created.
-            'ark:/12345/02' => 'Title of Collection #2',
             'ark:/12345/b1' => 'Title of Item #1',
+        );
+        foreach ($arkAndTitles as $ark => $title) {
+            $recordFrom = $this->_view->getRecordFromArk($ark);
+            $this->assertTrue(!empty($recordFrom), sprintf('Cannot get a record from ark "%s".', $ark));
+            $record = $this->getRecordByTitle($title);
+            $arkRecordFrom = $this->_view->ark($record);
+            $this->assertEquals($ark, $arkRecordFrom , sprintf('Ark "%s" is not the one of the record ("%s").', $ark, $arkRecordFrom));
+        }
+    }
+
+    /**
+     * Tests to check the default ark of a record.
+     */
+    public function testGetRecordAutomaticArk()
+    {
+        $arkAndTitles = array(
+            // This ark is automatically created for this record (id #4 here).
+            'ark:/12345/04' => 'Title of Collection #2',
         );
         foreach ($arkAndTitles as $ark => $title) {
             $recordFrom = $this->_view->getRecordFromArk($ark);

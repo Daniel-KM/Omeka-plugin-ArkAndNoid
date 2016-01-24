@@ -34,7 +34,8 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
                 'collection_id' => 2,
                 'Title' => 'Title of Collection #2',
                 'Identifier' => array(
-                    // An external ark.
+                    // An external ark, so the internal ark will be created
+                    // automatically.
                     'ark:/54321/c02',
             )),
         ),
@@ -80,6 +81,12 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
         $pluginHelper->setUp(self::PLUGIN_NAME);
 
         set_option('ark_format_name', 'omeka_id');
+
+        set_option('ark_naan', '12345');
+        set_option('ark_prefix_collection', '');
+        set_option('ark_length', 0);
+        set_option('ark_salt', '');
+        set_option('ark_control_key', false);
 
         $this->_prepareRecords();
     }
