@@ -275,18 +275,20 @@ abstract class Ark_Name_Abstract
         // Convert the salt into the alphabet.
         $salted = $this->_convBase($salted, '0123456789abcdef', $this->_getAlphabet());
 
-        // Pad the result.
-        $padded = $this->_pad($salted);
-        if (strlen($padded) > strlen($salted)) {
-            $message = __('The length of the format (%d characters) is too long for the salt (%d characters) [%s #%d].',
-                strlen($padded), strlen($salted), get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::WARN);
-            return $padded;
-        }
-
-        // With salt, the result may be cut, as recommended.
+        // Pad the result. Don't use the function _pad() to change the warn.
         $length = $this->_getParameter('length');
-        if ($length) {
+        if (strlen($salted) < $length) {
+            // This can occurs too when the conversion creates a small number.
+            $message = __('The Ark format "%s" requires a static length of %d characters, but the hash creates a %d characters long [%s #%d].',
+                get_class($this), $length, strlen($salted), get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::WARN);
+
+            $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
+            $salted = str_pad($salted, $length, $pad, STR_PAD_LEFT);
+        }
+        // No pad, so the hash is long enough.
+        // With salt, the result may be cut, as recommended.
+        elseif ($length) {
             $salted = substr($salted, 0, $length);
         }
 

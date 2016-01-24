@@ -49,9 +49,9 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
         // The salt process builds a code of 256 bits.
         $salt = $this->_getParameter('salt');
         if ($salt) {
-            // In fact, depends on the alphabet.
-            if ($length > 16) {
-                $this->_errorMessage = __('When a salt is set, the length should be empty or lower than 16.');
+            // TODO In fact, depends on the alphabet.
+            if ($length > 32) {
+                $this->_errorMessage = __('When a salt is set, the length should be empty or lower than 32.');
                 return false;
             }
         }
