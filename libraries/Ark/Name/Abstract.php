@@ -11,8 +11,16 @@ abstract class Ark_Name_Abstract
     protected $_record;
 
     /**
+     * When a salt and a length are set, the result may be cut and the process
+     * may need to be relaunched.
+     *
+     * @var integer
+     */
+    protected $_maxSaltLoop = 4000;
+
+    /**
      * This option specifies if the processor return a full ark, with naan,
-     * prefix, name, suffix and control key.
+     * prefix, name, suffix and control key, and without the "ark:/".
      *
      * @var boolean
      */
@@ -89,36 +97,126 @@ abstract class Ark_Name_Abstract
             return;
         }
 
-        // Create a full ark (in particular via noid).
-        if ($this->_isFullArk) {
-            $ark = $this->_create($record);
-            if ($ark) {
-                // TODO Check uniqueness?
-                return 'ark:/' . $ark;
-            }
-        }
-        // Name part ark.
-        else {
-            $ark = $naan . '/'
-                . $this->_getParameter('prefix')
-                . $this->_create($record)
-                . $this->_getParameter('suffix');
-            if ($ark) {
-                // The control key is computed against the naan + ark.
-                if ($this->_getParameter('control_key')) {
-                    $ark .= $this->_controlKey($ark);
-                }
+        $ark = $this->_create();
 
-                // TODO Check uniqueness?
-                return 'ark:/' . $ark;
+        // Check the result.
+        if (empty($ark)) {
+            $message = __('No Ark created: check your format "%s" [%s #%d].',
+                get_class($this), get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::ERR);
+            return;
+        }
+
+        // Complete partial ark.
+        if (!$this->_isFullArk) {
+            $mainPart = $ark;
+            $ark = $this->_prepareFullArk($ark);
+        }
+        // Check ark (useful only for external process).
+        elseif (!$this->_checkArk($ark)) {
+            $message = __('Ark "%s" is not correct: check your format "%s" and your processor [%s #%d].',
+                $ark, get_class($this), get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::ERR);
+            return;
+        }
+
+        // Add the protocol.
+        $ark = 'ark:/' . $ark;
+
+        // Check if the ark is single.
+        if ($this->_arkExists($ark)) {
+            if ($this->_isFullArk) {
+                $message = __('The proposed ark "%s" is not unique [%s #%d].',
+                    $ark, get_class($this->_record), $this->_record->id);
+                _log('[Ark] ' . $message, Zend_Log::ERR);
+                return;
+            }
+
+            $salt = $this->_getParameter('salt');
+            if (empty($salt)) {
+                $message = __('No Ark created with the format "%s": the proposed ark "%s" is not unique [%s #%d].',
+                    get_class($this), $ark, get_class($this->_record), $this->_record->id);
+                _log('[Ark] ' . $message, Zend_Log::ERR);
+                return;
+            }
+
+            // When there is a salt, the ark is resalted.
+            $i = 0;
+            do {
+                $mainPart = $this->_salt($maiinPart);
+                $ark = $this->_prepareFullArk($mainPart);
+                $ark = 'ark:/' . $ark;
+            }
+            while ($i++ < $this->_maxSaltLoop && $this->_arkExists($ark));
+            if ($i >= $this->_maxSaltLoop) {
+                $message = __('Unable to create a unique ark despite the salt. Check parameters of the format "%s" [%s #%d].',
+                    get_class($this), get_class($this->_record), $this->_record->id);
+                _log('[Ark] ' . $message, Zend_Log::ERR);
+                return;
             }
         }
+
+        return $ark;
     }
 
     /**
      * The true function used to create the name part of the record.
      */
     abstract protected function _create();
+
+    /**
+     * Helper to prepare an ark from a partial ark.
+     *
+     * @param string $ark A partial ark.
+     * @return string An ark.
+     */
+    protected function _prepareFullArk($mainPart)
+    {
+        $ark = $this->_getParameter('naan') . '/'
+            . $this->_getParameter('prefix')
+            . $mainPart
+            . $this->_getParameter('suffix');
+
+        // The control key is computed against the naan + ark.
+        if ($this->_getParameter('control_key')) {
+            $ark .= $this->_controlKey($ark);
+        }
+
+        return $ark;
+    }
+
+    /**
+     * Check if a full ark is an ark.
+     *
+     * @param string $ark
+     * @return boolean
+     */
+    protected function _checkFullArk($ark)
+    {
+        $ark = trim($ark);
+        $result = explode('/', $ark);
+
+        if (count($result) != 2) {
+            return false;
+        }
+        if ($result[0] != $this->_getParameter('naan')) {
+            return false;
+        }
+
+        $clean = preg_replace('/[^a-zA-Z0-9]/', '', $result[1]);
+        return $clean != $result[1];
+    }
+
+    /**
+     * Check if an ark exists in the base.
+     *
+     * @param string $ark The full well formed ark, with "ark:/".
+     * @return boolean
+     */
+    protected function _arkExists($ark)
+    {
+        return (boolean) get_view()->getRecordFromArk($ark, 'id');
+    }
 
     /**
      * Return the control key of a string.
