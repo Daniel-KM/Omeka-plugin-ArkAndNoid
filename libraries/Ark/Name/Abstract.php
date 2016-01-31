@@ -67,6 +67,16 @@ abstract class Ark_Name_Abstract
      */
     protected function _checkParameters()
     {
+        // These functions may be scripted.
+        if (!function_exists('bcadd')
+                || !function_exists('bcmul')
+                || !function_exists('bcdiv')
+                || !function_exists('bcmod')
+                || !function_exists('bcpow')
+            ) {
+            $this->_errorMessage .= __('The extension bc-math is not enabled, but required by the format "%s".', get_class($this));
+            return false;
+        }
         return true;
     }
 

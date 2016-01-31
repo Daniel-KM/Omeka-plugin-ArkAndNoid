@@ -8,6 +8,16 @@ class Ark_Name_Command extends Ark_Name_Abstract
 {
     protected $_isFullArk = true;
 
+    /**
+     * Check parameters.
+     *
+     * @return boolean
+     */
+    protected function _checkParameters()
+    {
+        return true;
+    }
+
     protected function _create()
     {
         // Record and parameters are not used. Extend the class if needed.

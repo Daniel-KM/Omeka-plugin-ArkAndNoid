@@ -26,7 +26,7 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
             $result = $this->_salt($main);
         }
 
-        // Not salt.
+        // No salt.
         else {
             $result = $this->_pad($main);
             if ($recordType == 'Collection' && $this->_getParameter('identifix')) {
@@ -102,6 +102,6 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
         }
         */
 
-        return true;
+        return parent::_checkParameters();
     }
 }
