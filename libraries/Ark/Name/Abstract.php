@@ -115,7 +115,7 @@ abstract class Ark_Name_Abstract
             $ark = $this->_prepareFullArk($ark);
         }
         // Check ark (useful only for external process).
-        elseif (!$this->_checkArk($ark)) {
+        elseif (!$this->_checkFullArk($ark)) {
             $message = __('Ark "%s" is not correct: check your format "%s" and your processor [%s #%d].',
                 $ark, get_class($this), get_class($this->_record), $this->_record->id);
             _log('[Ark] ' . $message, Zend_Log::ERR);
@@ -145,7 +145,7 @@ abstract class Ark_Name_Abstract
             // When there is a salt, the ark is resalted.
             $i = 0;
             do {
-                $mainPart = $this->_salt($maiinPart);
+                $mainPart = $this->_salt($mainPart);
                 $ark = $this->_prepareFullArk($mainPart);
                 $ark = 'ark:/' . $ark;
             }
@@ -167,7 +167,7 @@ abstract class Ark_Name_Abstract
     abstract protected function _create();
 
     /**
-     * Helper to prepare an ark from a partial ark.
+     * Helper to prepare an ark (without the protocol) from a partial ark.
      *
      * @param string $ark A partial ark.
      * @return string An ark.
@@ -206,7 +206,7 @@ abstract class Ark_Name_Abstract
         }
 
         $clean = preg_replace('/[^a-zA-Z0-9]/', '', $result[1]);
-        return $clean != $result[1];
+        return $clean == $result[1];
     }
 
     /**
