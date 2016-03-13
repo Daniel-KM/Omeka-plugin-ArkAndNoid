@@ -45,6 +45,7 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_options = array(
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
+        'ark_allow_short_urls' => false,
         'ark_format_name' => 'omeka_id',
         'ark_prefix' => '',
         'ark_prefix_collection' => '',
@@ -184,17 +185,6 @@ where: http://example.com/ark:/99999/',
     {
         $router = $args['router'];
         $router->addConfig(new Zend_Config_Ini(dirname(__FILE__) . '/routes.ini', 'routes'));
-
-        // Add a main policy route.
-        $router->addRoute('ark_policy_short', new Zend_Controller_Router_Route(
-            'ark/policy',
-            array(
-                'module' => 'ark',
-                'controller' => 'index',
-                'action' => 'policy',
-                'naan' => get_option('ark_naan'),
-            )
-        ));
     }
 
     /**

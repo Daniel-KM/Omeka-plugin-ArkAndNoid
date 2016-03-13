@@ -14,6 +14,9 @@ identifiers can be resolved via a service as [N2T], the Name-to-Thing Resolver.
 See a living example in the [Bibliothèque patrimoniale] of [Mines ParisTech]
 (click on "Notice" to display the record of any document).
 
+If you don't have an authority number, the plugin will create a non standard
+ark, but nevertheless a unique and opaque identifier that can be managed.
+
 
 Presentation of Ark
 -------------------

@@ -95,9 +95,6 @@ abstract class Ark_Name_Abstract
         }
 
         $naan = $this->_getParameter('naan');
-        if (empty($naan)) {
-            return;
-        }
 
         $ark = $this->_create();
 
@@ -110,8 +107,8 @@ abstract class Ark_Name_Abstract
         }
 
         // Complete partial ark.
+        $mainPart = $ark;
         if (!$this->_isFullArk) {
-            $mainPart = $ark;
             $ark = $this->_prepareFullArk($ark);
         }
         // Check ark (useful only for external process).
@@ -123,7 +120,7 @@ abstract class Ark_Name_Abstract
         }
 
         // Add the protocol.
-        $ark = 'ark:/' . $ark;
+        $ark = ($naan ? 'ark:/' : 'ark/') . $ark;
 
         // Check if the ark is single.
         if ($this->_arkExists($ark)) {
@@ -147,7 +144,7 @@ abstract class Ark_Name_Abstract
             do {
                 $mainPart = $this->_salt($mainPart);
                 $ark = $this->_prepareFullArk($mainPart);
-                $ark = 'ark:/' . $ark;
+                $ark = ($naan ? 'ark:/' : 'ark/') . $ark;
             }
             while ($i++ < $this->_maxSaltLoop && $this->_arkExists($ark));
             if ($i >= $this->_maxSaltLoop) {
@@ -174,7 +171,8 @@ abstract class Ark_Name_Abstract
      */
     protected function _prepareFullArk($mainPart)
     {
-        $ark = $this->_getParameter('naan') . '/'
+        $naan = $this->_getParameter('naan');
+        $ark = ($naan ? $naan . '/' : '')
             . $this->_getParameter('prefix')
             . $mainPart
             . $this->_getParameter('suffix');
@@ -198,15 +196,27 @@ abstract class Ark_Name_Abstract
         $ark = trim($ark);
         $result = explode('/', $ark);
 
-        if (count($result) != 2) {
-            return false;
+        $naan = $this->_getParameter('naan');
+
+        if ($naan) {
+            if (count($result) != 2) {
+                return false;
+            }
+            if ($result[0] != $naan) {
+                return false;
+            }
+
+            $clean = preg_replace('/[^a-zA-Z0-9]/', '', $result[1]);
+            return $clean == $result[1];
         }
-        if ($result[0] != $this->_getParameter('naan')) {
+
+        // Else no naan.
+        if (strpos($ark, '/') !== false) {
             return false;
         }
 
-        $clean = preg_replace('/[^a-zA-Z0-9]/', '', $result[1]);
-        return $clean == $result[1];
+        $clean = preg_replace('/[^a-zA-Z0-9]/', '', $ark);
+        return $clean == $ark;
     }
 
     /**

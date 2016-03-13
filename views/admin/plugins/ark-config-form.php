@@ -18,8 +18,21 @@
         <div class='inputs five columns omega'>
             <?php echo $this->formText('ark_naan', get_option('ark_naan'), null); ?>
             <p class="explanation">
-                <?php echo __('This required unique number, usually with five digits, is assigned for free by the California Digital Library to any institution with a historical or archival purposes.'); ?>
+                <?php echo __('This unique number, usually with five digits, is assigned for free by the California Digital Library to any institution with a historical or archival purposes.'); ?>
                 <?php echo __('The naan "12345" is a special one and serves for example purposes and "99999" is for test purposes.'); ?>
+                <?php echo __('If not set, the urls will have the non standard format "ark/:name", without ":".'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_allow_short_urls', __('Allow Short Urls')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formCheckbox('ark_allow_short_urls', true, array('checked' => (boolean) get_option('ark_allow_short_urls'))); ?>
+            <p class="explanation">
+                <?php echo __('This option is used only when a naan is set.'); ?>
+                <?php echo __('Short urls are non standard arks like "ark/:name", without the naan and without ":".'); ?>
             </p>
         </div>
     </div>

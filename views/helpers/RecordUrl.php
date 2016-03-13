@@ -54,7 +54,7 @@ class Ark_View_Helper_RecordUrl extends Omeka_View_Helper_RecordUrl
             if (!isset($ark['qualifier'])) {
                 $ark['qualifier'] = '';
             }
-            $route = 'ark_id';
+            $route = get_option('ark_naan') ? 'ark_id' : 'ark_id_short';
             $urlString = $this->view->url($ark, $route, $queryParams);
             if ($getAbsoluteUrl) {
                 $urlString = $this->view->serverUrl() . $urlString;
@@ -99,7 +99,7 @@ class Ark_View_Helper_RecordUrl extends Omeka_View_Helper_RecordUrl
         $ark = $this->_getArk($file);
         if ($ark) {
             $ark['variant'] = $format;
-            $route = 'ark_file_variant';
+            $route = get_option('ark_naan') ? 'ark_file_variant' : 'ark_file_variant_short';
             $urlString = $this->view->url($ark, $route, $queryParams);
         }
         // If no path have been found, return the standard path.

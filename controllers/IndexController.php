@@ -11,9 +11,30 @@ class Ark_IndexController extends Omeka_Controller_AbstractActionController
      */
     public function indexAction()
     {
+        $short = $this->getParam('short');
         $naan = $this->getParam('naan');
-        if (empty($naan) || $naan != get_option('ark_naan')) {
-            throw new Omeka_Controller_Exception_404;
+
+        // There is no naan, so check if this is an allowed url.
+        if (empty($naan)) {
+            if ($short !== 'true') {
+                throw new Omeka_Controller_Exception_404;
+            }
+            $setNaan = get_option('ark_naan');
+            if (!empty($setNaan)) {
+                if ($naan != $setNaan || !get_option('ark_allow_short_urls')) {
+                    throw new Omeka_Controller_Exception_404;
+                }
+            }
+        }
+        // There is a naan, so check it.
+        else {
+            // An url can't be short if there is a naan.
+            if ($short === 'true') {
+                throw new Omeka_Controller_Exception_404;
+            }
+            if ($naan != get_option('ark_naan')) {
+                throw new Omeka_Controller_Exception_404;
+            }
         }
 
         // Check special name (empty, "?" or "??")).
@@ -24,6 +45,7 @@ class Ark_IndexController extends Omeka_Controller_AbstractActionController
                 'controller' => 'index',
                 'action' => 'policy',
                 'naan' => $naan,
+                'short' => $short,
             ));
         }
 
@@ -117,11 +139,6 @@ class Ark_IndexController extends Omeka_Controller_AbstractActionController
      */
     public function policyAction()
     {
-        $naan = $this->getParam('naan');
-        if (empty($naan) || $naan != get_option('ark_naan')) {
-            throw new Omeka_Controller_Exception_404;
-        }
-
         $last = empty($_SERVER['REQUEST_URI'])
             ? ''
             : substr($_SERVER['REQUEST_URI'], strrpos($_SERVER['REQUEST_URI'], '/') + 1);

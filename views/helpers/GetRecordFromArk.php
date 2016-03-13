@@ -22,20 +22,21 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
             return null;
         }
 
-        $baseNaan = 'ark:/' . get_option('ark_naan') . '/';
+        $naan = get_option('ark_naan');
+        $base = $naan ? "ark:/$naan/" : 'ark/';
 
         if (is_string($ark)) {
             // Quick check of format.
-            if (strpos($ark, $baseNaan) !== 0) {
+            if (strpos($ark, $base) !== 0) {
                 return null;
             }
 
             // This is the ark of the naan.
-            if ($ark == $baseNaan) {
+            if ($ark == $base) {
                 return null;
             }
 
-            $fullName = substr($ark, strlen($baseNaan));
+            $fullName = substr($ark, strlen($base));
             if ($fullName == '?' || $fullName == '??') {
                 return null;
             }
@@ -52,7 +53,9 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
             }
         }
         elseif (is_array($ark)) {
-            if (empty($ark['naan']) || $ark['naan'] != get_option('ark_naan')
+            $allowShortUrls = empty($naan) || get_option('ark_allow_short_urls');
+            if ((empty($ark['naan']) && !$allowShortUrls)
+                    || ($ark['naan'] && $ark['naan'] != $naan)
                     || empty($ark['name']) || $ark['name'] == '?' || $ark['name'] == '??'
                 ) {
                 return null;
@@ -77,7 +80,7 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
             ->reset(Zend_Db_Select::COLUMNS)
             ->from(array(), array($alias . '.record_type', $alias . '.record_id'))
             ->where("`$alias`.`element_id` = ?", $element->id)
-            ->where("`$alias`.`text` = ?", $baseNaan . $name)
+            ->where("`$alias`.`text` = ?", $base . $name)
             // If more than one arks have the same id, always use the first one.
             ->order("$alias.id ASC")
             ->limit(1);

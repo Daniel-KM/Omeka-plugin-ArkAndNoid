@@ -26,7 +26,8 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
             case 'absolute':
                 return absolute_url($ark);
             case 'name':
-                return substr($ark, strlen('ark:/' . get_option('ark_naan') . '/'));
+                $naan = get_option('ark_naan');
+                return substr($ark, $naan ? strlen('ark:/' . $naan . '/') : strlen('ark/'));
             case 'route':
             case 'text':
             default:
@@ -58,7 +59,8 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
         // Unlike controller, the element texts are already loaded here, so this
         // avoids a direct query.
         $identifiers = $record->getElementTexts('Dublin Core', 'Identifier');
-        $base = 'ark:/' . get_option('ark_naan') . '/';
+        $naan = get_option('ark_naan');
+        $base = $naan ? "ark:/$naan/" : 'ark/';
         $ark = null;
         foreach ($identifiers as $identifier) {
             if (strpos($identifier->text, $base) === 0) {
@@ -70,7 +72,7 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
         if ($ark) {
             if ($asArray) {
                 $ark = array(
-                    'naan' => get_option('ark_naan'),
+                    'naan' => $naan,
                     'name' => substr($ark, strlen($base)),
                 );
             }
