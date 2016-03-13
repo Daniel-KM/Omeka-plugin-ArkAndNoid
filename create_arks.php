@@ -93,6 +93,7 @@ exit;
 function create_arks($recordType, $private)
 {
     $db = get_db();
+    $view = get_view();
 
     // Get the list of records.
     $table = $db->getTable($recordType)->getTableName();
@@ -104,14 +105,26 @@ function create_arks($recordType, $private)
 
     $total = count($result);
     echo "Process $total records of type $recordType."  . PHP_EOL;
+    $new = 0;
     foreach ($result as $key => $recordId) {
         $key++;
-        echo "  $recordType #$recordId ($key / $total)." . PHP_EOL;
+        echo "  $recordType #$recordId ($key / $total)";
         $record = get_record_by_id($recordType, $recordId);
-        $record->save();
+        $ark = $view->Ark($record);
+        if ($ark) {
+            echo ": $ark" . PHP_EOL;
+        }
+        else {
+            $record->save();
+            // Need to reload it to get the ark.
+            $record = get_record_by_id($recordType, $recordId);
+            $ark = $view->Ark($record);
+            echo ": $ark (new)" . PHP_EOL;
+            $new++;
+        }
         release_object($record);
         unset($record);
     }
-    echo "Process terminated for $total records of type $recordType."  . PHP_EOL;
+    echo "Process terminated for $total records of type $recordType : $new new arks."  . PHP_EOL;
 }
 ?>
