@@ -170,6 +170,11 @@ if the parameters are the same.
 To set arks to existing records, simply select them in admin/items/browse and
 batch edit them, without any change.
 
+You can run the command line tool too:
+```
+php -f plugins/Ark/create_arks.php
+```
+
 ** IMPORTANT **
 
 Even if a check is done after creation of an ark to avoid any duplicate, it's
