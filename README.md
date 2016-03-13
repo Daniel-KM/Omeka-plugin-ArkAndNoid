@@ -117,19 +117,19 @@ with a control key, like "12345/92" and "12345/bkp6" for the NAAN "12345".
 
 The alphabets are these ones:
   - Standard (from Perl script 0.424):
-    - "d": { 0-9 x } cardinality 10
-    - "e": { 1-9 b-z } - {l, vowels} cardinality 29
+   - "d": { 0-9 x } cardinality 10
+   - "e": { 1-9 b-z } - {l, vowels} cardinality 29
   - Proposed in Perl script 0.424:
-    - "i": { 0-9 x } cardinality 11
-    - "x": { 0-9 a-f _ } cardinality 17
-    - "v": { 0-9 a-z _ } cardinality 37
-    - "E": { 1-9 b-z B-Z } - {l, vowels} cardinality 47
-    - "w": { 0-9 a-z A-Z # * + @ _ } cardinality 67
+   - "i": { 0-9 x } cardinality 11
+   - "x": { 0-9 a-f _ } cardinality 17
+   - "v": { 0-9 a-z _ } cardinality 37
+   - "E": { 1-9 b-z B-Z } - {l, vowels} cardinality 47
+   - "w": { 0-9 a-z A-Z # * + @ _ } cardinality 67
   - Proposed in Perl script 0.424, but not accepted for Ark:
-    - "c": Visible ASCII - { % - . / \ } cardinality 89
+   - "c": Visible ASCII - { % - . / \ } cardinality 89
   - Not proposed in the Perl script, but compatible with Ark and useful because
   the longest with only alphanumeric characters:
-    - "l" { 0-9 a-z A-Z } - { l } cardinality 61
+   - "l": { 0-9 a-z A-Z } - { l } cardinality 61
 
 The prime cardinality allows to set an efficient check character ("k") against
 a single-character error and a transposition of two single characters.
