@@ -22,8 +22,9 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
             return null;
         }
 
+        $protocol = get_option('ark_protocol');
         $naan = get_option('ark_naan');
-        $base = $naan ? "ark:/$naan/" : 'ark/';
+        $base = $naan ? "$protocol/$naan/" : "$protocol/";
 
         if (is_string($ark)) {
             // Quick check of format.
@@ -53,9 +54,7 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
             }
         }
         elseif (is_array($ark)) {
-            $allowShortUrls = empty($naan) || get_option('ark_allow_short_urls');
-            if ((empty($ark['naan']) && !$allowShortUrls)
-                    || ($ark['naan'] && $ark['naan'] != $naan)
+             if ($ark['naan'] !== get_option('ark_naan')
                     || empty($ark['name']) || $ark['name'] == '?' || $ark['name'] == '??'
                 ) {
                 return null;

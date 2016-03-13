@@ -26,8 +26,9 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
             case 'absolute':
                 return absolute_url($ark);
             case 'name':
+                $protocol = get_option('ark_protocol');
                 $naan = get_option('ark_naan');
-                return substr($ark, $naan ? strlen('ark:/' . $naan . '/') : strlen('ark/'));
+                return substr($ark, $naan ? strlen("$protocol/$naan/") : strlen("$protocol/"));
             case 'route':
             case 'text':
             default:
@@ -59,8 +60,9 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
         // Unlike controller, the element texts are already loaded here, so this
         // avoids a direct query.
         $identifiers = $record->getElementTexts('Dublin Core', 'Identifier');
+        $protocol = get_option('ark_protocol');
         $naan = get_option('ark_naan');
-        $base = $naan ? "ark:/$naan/" : 'ark/';
+        $base = $naan ? "$protocol/$naan/" : "$protocol/";
         $ark = null;
         foreach ($identifiers as $identifier) {
             if (strpos($identifier->text, $base) === 0) {

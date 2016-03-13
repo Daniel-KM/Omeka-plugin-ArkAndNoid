@@ -10,7 +10,19 @@
     <?php echo __('Once set and arks made public, it is not recommended to change these parameters in order to keep the consistency and the sustainability of the names.'); ?>
     <?php echo __('Anyway, once created, an ark is never modified, even if these parameters are changed, unless the ark is manually removed from the record.'); ?>
 </p>
-<fieldset id="fieldset-ark-institution"><legend><?php echo __('Institution'); ?></legend>
+<fieldset id="fieldset-ark-protocol"><legend><?php echo __('Institution and Protocol'); ?></legend>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_protocol', __('Protocol')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_protocol', get_option('ark_protocol'), null); ?>
+            <p class="explanation">
+                <?php echo __('The "protocol" of ark is "ark:".'); ?>
+                <?php echo __('Without an authority number, another "protocol" must be specified, for example "record" or "document".'); ?>
+            </p>
+        </div>
+    </div>
     <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_naan', __('Name Assigning Authority Number (NAAN)')); ?>
@@ -20,19 +32,7 @@
             <p class="explanation">
                 <?php echo __('This unique number, usually with five digits, is assigned for free by the California Digital Library to any institution with a historical or archival purposes.'); ?>
                 <?php echo __('The naan "12345" is a special one and serves for example purposes and "99999" is for test purposes.'); ?>
-                <?php echo __('If not set, the urls will have the non standard format "ark/:name", without ":".'); ?>
-            </p>
-        </div>
-    </div>
-    <div class="field">
-        <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_allow_short_urls', __('Allow Short Urls')); ?>
-        </div>
-        <div class='inputs five columns omega'>
-            <?php echo $this->formCheckbox('ark_allow_short_urls', true, array('checked' => (boolean) get_option('ark_allow_short_urls'))); ?>
-            <p class="explanation">
-                <?php echo __('This option is used only when a naan is set.'); ?>
-                <?php echo __('Short urls are non standard arks like "ark/:name", without the naan and without ":".'); ?>
+                <?php echo __('If not set, the urls will have the non standard format "my_protocol/:name".'); ?>
             </p>
         </div>
     </div>
@@ -340,6 +340,17 @@
         </div>
         <div class='inputs five columns omega'>
             <?php echo $this->formText('ark_display_admin', get_option('ark_display_admin'), null); ?>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_routes_ini', __('Use "routes.ini"')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formCheckbox('ark_routes_ini', true, array('checked' => (boolean) get_option('ark_routes_ini'))); ?>
+            <p class="explanation">
+                <?php echo __('For complex routing, the file "routes.ini" at the root of the plugin can be used.'); ?>
+            </p>
         </div>
     </div>
 </fieldset>

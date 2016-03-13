@@ -120,7 +120,8 @@ abstract class Ark_Name_Abstract
         }
 
         // Add the protocol.
-        $ark = ($naan ? 'ark:/' : 'ark/') . $ark;
+        $protocol = $this->_getParameter('protocol');
+        $ark = $protocol . '/' . $ark;
 
         // Check if the ark is single.
         if ($this->_arkExists($ark)) {
@@ -143,8 +144,7 @@ abstract class Ark_Name_Abstract
             $i = 0;
             do {
                 $mainPart = $this->_salt($mainPart);
-                $ark = $this->_prepareFullArk($mainPart);
-                $ark = ($naan ? 'ark:/' : 'ark/') . $ark;
+                $ark = $protocol . '/' . $this->_prepareFullArk($mainPart);
             }
             while ($i++ < $this->_maxSaltLoop && $this->_arkExists($ark));
             if ($i >= $this->_maxSaltLoop) {

@@ -122,8 +122,9 @@ batch edit them, without any change.
 
 ** IMPORTANT **
 
-It's not recommended to change parameters once records are public in order to
-keep the consistency and the sustainability of the archive.
+Even if a check is done after creation of an ark to avoid any duplicate, it's
+not recommended to change parameters once records are public in order to keep
+the consistency and the sustainability of the archive.
 
 
 Warning

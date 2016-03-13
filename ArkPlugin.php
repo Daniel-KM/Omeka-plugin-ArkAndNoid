@@ -43,9 +43,9 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array This plugin's options.
      */
     protected $_options = array(
+        'ark_protocol' => 'ark:',
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
-        'ark_allow_short_urls' => false,
         'ark_format_name' => 'omeka_id',
         'ark_prefix' => '',
         'ark_prefix_collection' => '',
@@ -78,6 +78,7 @@ where: http://example.com/ark:/99999/',
         'ark_use_admin' => false,
         'ark_display_public' => '<a href="WEB_ROOT/%1$s">%1$s</a>',
         'ark_display_admin' => '<a href="WEB_ROOT/admin/%1$s">%1$s</a>',
+        'ark_routes_ini' => false,
     );
 
     /**
@@ -140,6 +141,7 @@ where: http://example.com/ark:/99999/',
         // Check the parameters for the format.
         $format = $post['ark_format_name'];
         $parameters = array(
+            'protocol' => $post['ark_protocol'],
             'naan' => $post['ark_naan'],
             'prefix' => $post['ark_prefix'] . $post['ark_prefix_collection'] . $post['ark_prefix_item'],
             'suffix' => $post['ark_suffix'] . $post['ark_suffix_collection'] . $post['ark_suffix_item'],
@@ -165,6 +167,9 @@ where: http://example.com/ark:/99999/',
         $salt = get_option('ark_salt');
         $previousSalts = get_option('ark_previous_salts');
 
+        // Clean the file variants.
+        $post['ark_file_variants'] = preg_replace('/\s+/', ' ', trim($post['ark_file_variants']));
+
         foreach ($this->_options as $optionKey => $optionValue) {
             if (isset($post[$optionKey])) {
                 set_option($optionKey, $post[$optionKey]);
@@ -184,7 +189,99 @@ where: http://example.com/ark:/99999/',
     public function hookDefineRoutes($args)
     {
         $router = $args['router'];
-        $router->addConfig(new Zend_Config_Ini(dirname(__FILE__) . '/routes.ini', 'routes'));
+
+        if (get_option('ark_routes_ini')) {
+            $router->addConfig(new Zend_Config_Ini(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
+            return;
+        }
+
+        $protocol = get_option('ark_protocol');
+        if (empty($protocol)) {
+            return;
+        }
+
+        // Routes is different with "ark", because there is a naan.
+        if ($protocol == 'ark:') {
+            $naan = get_option('ark_naan');
+            if (empty($naan)) {
+                return;
+            }
+
+            $router->addRoute('ark_policy', new Zend_Controller_Router_Route(
+                "$protocol/$naan/",
+                array(
+                    'module' => 'ark',
+                    'controller' => 'index',
+                    'action' => 'policy',
+                    'naan' => $naan,
+            )));
+
+            // Two non standard routes for ark.
+            $router->addRoute('ark_policy_short', new Zend_Controller_Router_Route(
+                'ark/policy',
+                array(
+                    'module' => 'ark',
+                    'controller' => 'index',
+                    'action' => 'policy',
+                    'naan' => $naan,
+            )));
+
+            $router->addRoute('ark_policy_ark', new Zend_Controller_Router_Route(
+                "$protocol/policy",
+                array(
+                    'module' => 'ark',
+                    'controller' => 'index',
+                    'action' => 'policy',
+                    'naan' => $naan,
+            )));
+
+            $protocolBase = "ark:/$naan";
+        }
+
+        // Routes for non-arks unique identifiers.
+        else {
+            $router->addRoute('ark_policy', new Zend_Controller_Router_Route(
+                $protocol . '/policy',
+                array(
+                    'module' => 'ark',
+                    'controller' => 'index',
+                    'action' => 'policy',
+                    'naan' => $naan,
+            )));
+
+            $protocolBase = $protocol;
+        }
+
+        $router->addRoute('ark_id', new Zend_Controller_Router_Route(
+            "$protocolBase/:name/:qualifier",
+            array(
+                'module' => 'ark',
+                'controller' => 'index',
+                'action' => 'index',
+                'naan' => $naan,
+                'qualifier' => '',
+            ),
+            array(
+                'name' => '\w+',
+        )));
+
+        // A regex is needed, because a variant is separated by a ".", not a
+        // "/".
+        $router->addRoute('ark_file_variant', new Zend_Controller_Router_Route_Regex(
+            $protocolBase . '/(\w+)/(.*)\.(' . str_replace(' ', '|', get_option('ark_file_variants')) . ')',
+            array(
+                'module' => 'ark',
+                'controller' => 'index',
+                'action' => 'index',
+                'naan' => $naan,
+            ),
+            array(
+                1 => 'name',
+                2 => 'qualifier',
+                3 => 'variant',
+            ),
+            "$protocolBase/%s/%s.%s"
+        ));
     }
 
     /**
@@ -433,6 +530,7 @@ where: http://example.com/ark:/99999/',
                 && get_option('ark_suffix_collection') === get_option('ark_suffix_item');
 
             $parameters = array(
+                'protocol' => get_option('ark_protocol'),
                 'naan' => get_option('ark_naan'),
                 'prefix' => $prefix,
                 'suffix' => $suffix,
