@@ -1,8 +1,8 @@
-Ark (plugin for Omeka)
-======================
+Ark & Noid (plugin for Omeka)
+=============================
 
-[Ark] is a plugin for [Omeka] that creates and manages [ark identifiers], that
-can replace the default [cool URIs] of each record, that corresponds to the
+[Ark & Noid] is a plugin for [Omeka] that creates and manages [ark identifiers],
+that can replace the default [cool URIs] of each record, that corresponds to the
 simple number of a row in a table of the database.
 
 Arks are short, opaque, meaningless, universal, unique and persistent ids for
@@ -239,7 +239,7 @@ Copyright
 * Copyright Daniel Berthereau, 2015-2016
 
 
-[Ark]: https://github.com/Daniel-KM/ArkForOmeka
+[Ark & Noid]: https://github.com/Daniel-KM/ArkAndNoid4Omeka
 [Omeka]: https://omeka.org
 [ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
 [Cool URIs]: https://www.w3.org/TR/cooluris
@@ -258,7 +258,7 @@ Copyright
 [specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
 [templates]: https://metacpan.org/pod/distribution/Noid/noid#TEMPLATES
-[plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/issues
+[plugin issues]: https://github.com/Daniel-KM/ArkAndNoid4Omeka/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
