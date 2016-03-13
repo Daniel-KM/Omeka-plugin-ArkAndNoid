@@ -52,10 +52,7 @@
         </div>
     </div>
 </fieldset>
-<fieldset id="fieldset-ark-format-parameters"><legend><i><?php echo __('Parameters'); ?></i></legend>
-    <p class="explanation">
-        <?php echo __('These parameters may be used by internal formats.'); ?>
-    </p>
+<fieldset id="fieldset-ark-format-omeka_id"><legend><i><?php echo __('Parameters for the format "Omeka Id"'); ?></i></legend>
     <p class="explanation">
         <?php echo __('Prefixes and suffixes are a single character or a short string to prepend or to append to the main part.'); ?>
         <?php echo __('When set, the length should be set too.'); ?>
@@ -66,10 +63,10 @@
     </p>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_prefix', __('Main prefix')); ?>
+            <?php echo $this->formLabel('ark_id_prefix', __('Main prefix')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_prefix', get_option('ark_prefix'), null); ?>
+            <?php echo $this->formText('ark_id_prefix', get_option('ark_id_prefix'), null); ?>
             <p class="explanation">
                 <?php echo __('This optional field allows to identify all records used in Omeka, in particular when ark is used somewhere else.'); ?>
             </p>
@@ -77,18 +74,18 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_prefix_collection', __('Prefix for collections')); ?>
+            <?php echo $this->formLabel('ark_id_prefix_collection', __('Prefix for collections')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_prefix_collection', get_option('ark_prefix_collection'), null); ?>
+            <?php echo $this->formText('ark_id_prefix_collection', get_option('ark_id_prefix_collection'), null); ?>
         </div>
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_prefix_item', __('Prefix for items')); ?>
+            <?php echo $this->formLabel('ark_id_prefix_item', __('Prefix for items')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_prefix_item', get_option('ark_prefix_item'), null); ?>
+            <?php echo $this->formText('ark_id_prefix_item', get_option('ark_id_prefix_item'), null); ?>
             <p>
                 <?php echo __('When prefixes and suffixes of collections and items are the same, the first letter of the alphabet is automatically prepended to the collection name, when needed.'); ?>
             </p>
@@ -96,34 +93,34 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_suffix', __('Main suffix')); ?>
+            <?php echo $this->formLabel('ark_id_suffix', __('Main suffix')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_suffix', get_option('ark_suffix'), null); ?>
+            <?php echo $this->formText('ark_id_suffix', get_option('ark_id_suffix'), null); ?>
         </div>
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_suffix_collection', __('Suffix for collections')); ?>
+            <?php echo $this->formLabel('ark_id_suffix_collection', __('Suffix for collections')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_suffix_collection', get_option('ark_suffix_collection'), null); ?>
+            <?php echo $this->formText('ark_id_suffix_collection', get_option('ark_id_suffix_collection'), null); ?>
         </div>
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_suffix_item', __('Suffix for items')); ?>
+            <?php echo $this->formLabel('ark_id_suffix_item', __('Suffix for items')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_suffix_item', get_option('ark_suffix_item'), null); ?>
+            <?php echo $this->formText('ark_id_suffix_item', get_option('ark_id_suffix_item'), null); ?>
         </div>
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_length', __('Length of the name')); ?>
+            <?php echo $this->formLabel('ark_id_length', __('Length of the name')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_length', get_option('ark_length'), null); ?>
+            <?php echo $this->formText('ark_id_length', get_option('ark_id_length'), null); ?>
             <p class="explanation">
                 <?php echo __('The length of the name (main part of the identifier, without prefix, suffix and control key).'); ?>
                 <?php echo __('A length of three alphanumeric characters is enough to create 200000 arks.'); ?>
@@ -134,10 +131,10 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_pad', __('Pad to prepend')); ?>
+            <?php echo $this->formLabel('ark_id_pad', __('Pad to prepend')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_pad', get_option('ark_pad'), null); ?>
+            <?php echo $this->formText('ark_id_pad', get_option('ark_id_pad'), null); ?>
             <p class="explanation">
                 <?php echo __('The string pad to use when a specific length is required (generally "0" or "a").'); ?>
             </p>
@@ -145,15 +142,15 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_salt', __('Salt to use')); ?>
+            <?php echo $this->formLabel('ark_id_salt', __('Salt to use')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_salt', get_option('ark_salt'), null); ?>
+            <?php echo $this->formText('ark_id_salt', get_option('ark_id_salt'), null); ?>
             <p class="explanation">
                 <?php echo __('A salt can be used to randomize the ark.'); ?>
                 <?php echo __('It is recommended to set a long meaningless string.'); ?>
                 <?php echo __('Leave empty to not use one.'); ?>
-                <?php $previousSalts = get_option('ark_previous_salts');
+                <?php $previousSalts = get_option('ark_id_previous_salts');
                     if ($previousSalts) {
                         echo __('Previous salts:');
                         echo '<ul><li>' . str_replace(PHP_EOL, '</li><li>', $previousSalts) . '</li></ul>';
@@ -185,7 +182,7 @@
                 'lowercase_alphanumeric_no_vowel_no_l' => __('Lower case alphanumeric, without vowels and "l"'),
                 'uppercase_alphanumeric_no_vowel' => __('Upper case alphanumeric, without vowels'),
             );
-            echo $this->formSelect('ark_alphabet', get_option('ark_alphabet'), array(), $options); ?>
+            echo $this->formSelect('ark_id_alphabet', get_option('ark_id_alphabet'), array(), $options); ?>
             <p class="explanation">
                 <?php echo __('Select the alphabet used to create arks.'); ?>
             </p>
@@ -193,20 +190,17 @@
     </div>
     <div class="field">
         <div class="two columns alpha">
-            <?php echo $this->formLabel('ark_control_key', __('Control character')); ?>
+            <?php echo $this->formLabel('ark_id_control_key', __('Control character')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formCheckbox('ark_control_key', true, array('checked' => (boolean) get_option('ark_control_key'))); ?>
+            <?php echo $this->formCheckbox('ark_id_control_key', true, array('checked' => (boolean) get_option('ark_id_control_key'))); ?>
             <p class="explanation">
                 <?php echo __('If checked, a character will be appended to the identifier to check quickly if the identifier is valid.'); ?>
             </p>
         </div>
     </div>
 </fieldset>
-<fieldset id="fieldset-ark-external-options"><legend><i><?php echo __('External Formats'); ?></i></legend>
-    <p class="explanation">
-        <?php echo __('External formats may or may not use other parameters.' ); ?>
-    </p>
+<fieldset id="fieldset-ark-format-command"><legend><i><?php echo __('Parameters for the format "External command"'); ?></i></legend>
     <div class="field">
         <div class="two columns alpha">
             <?php echo $this->formLabel('ark_command', __('External command')); ?>

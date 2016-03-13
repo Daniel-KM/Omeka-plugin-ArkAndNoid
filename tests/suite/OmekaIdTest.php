@@ -144,8 +144,8 @@ class Ark_OmekaIdTest extends Ark_Test_AppTestCase
     protected function _processTests($tests, $recordId, $isError = false)
     {
         foreach ($tests as $test) {
-            set_option('ark_prefix_collection', $test['prefixes']['Collection']);
-            set_option('ark_prefix_item', $test['prefixes']['Item']);
+            set_option('ark_id_prefix_collection', $test['prefixes']['Collection']);
+            set_option('ark_id_prefix_item', $test['prefixes']['Item']);
 
             foreach (array_keys($test['results']) as $length) {
                 $parameters = array(
@@ -170,7 +170,7 @@ class Ark_OmekaIdTest extends Ark_Test_AppTestCase
     {
         $results = array();
         foreach ($result as $recordType => $value) {
-            $parameters['prefix'] = get_option('ark_prefix_' . strtolower($recordType));
+            $parameters['prefix'] = get_option('ark_id_prefix_' . strtolower($recordType));
 
             $processor = new Ark_Name_OmekaId($parameters);
             $record = new $recordType;

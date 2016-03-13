@@ -20,6 +20,7 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'initialize',
         'install',
+        'upgrade',
         'uninstall',
         'config_form',
         'config',
@@ -47,18 +48,18 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
         'ark_format_name' => 'omeka_id',
-        'ark_prefix' => '',
-        'ark_prefix_collection' => '',
-        'ark_prefix_item' => '',
-        'ark_suffix' => '',
-        'ark_suffix_collection' => '',
-        'ark_suffix_item' => '',
-        'ark_length' => 4,
-        'ark_pad' => '0',
-        'ark_salt' => 'RaNdOm SaLt',
-        'ark_previous_salts' => '',
-        'ark_alphabet' => 'alphanumeric_no_vowel',
-        'ark_control_key' => true,
+        'ark_id_prefix' => '',
+        'ark_id_prefix_collection' => '',
+        'ark_id_prefix_item' => '',
+        'ark_id_suffix' => '',
+        'ark_id_suffix_collection' => '',
+        'ark_id_suffix_item' => '',
+        'ark_id_length' => 4,
+        'ark_id_pad' => '0',
+        'ark_id_salt' => 'RaNdOm SaLt',
+        'ark_id_previous_salts' => '',
+        'ark_id_alphabet' => 'alphanumeric_no_vowel',
+        'ark_id_control_key' => true,
         'ark_command' => '',
         'ark_format_qualifier' => 'order',
         'ark_file_variants' => 'original fullsize thumbnail square_thumbnail',
@@ -104,6 +105,45 @@ where: http://example.com/ark:/99999/',
     }
 
     /**
+     * Upgrade the plugin.
+     */
+    public function hookUpgrade($args)
+    {
+        $oldVersion = $args['old_version'];
+        $newVersion = $args['new_version'];
+        $db = $this->_db;
+
+        if (version_compare($oldVersion, '2.4', '<')) {
+            delete_option('ark_allow_short_urls');
+            set_option('ark_protocol', $this->_options['ark_protocol']);
+            set_option('ark_id_prefix', get_option('ark_prefix'));
+            delete_option('ark_prefix');
+            set_option('ark_id_prefix_collection', get_option('ark_prefix_collection'));
+            delete_option('ark_prefix_collection');
+            set_option('ark_id_prefix_item', get_option('ark_prefix_item'));
+            delete_option('ark_prefix_item');
+            set_option('ark_id_suffix', get_option('ark_suffix'));
+            delete_option('ark_suffix');
+            set_option('ark_id_suffix_collection', get_option('ark_suffix_collection'));
+            delete_option('ark_suffix_collection');
+            set_option('ark_id_suffix_item', get_option('ark_suffix_item'));
+            delete_option('ark_suffix_item');
+            set_option('ark_id_length', get_option('ark_length'));
+            delete_option('ark_length');
+            set_option('ark_id_pad', get_option('ark_pad'));
+            delete_option('ark_pad');
+            set_option('ark_id_salt', get_option('ark_salt'));
+            delete_option('ark_salt');
+            set_option('ark_id_previous_salts', get_option('ark_previous_salts'));
+            delete_option('ark_previous_salts');
+            set_option('ark_id_alphabet', get_option('ark_alphabet'));
+            delete_option('ark_alphabet');
+            set_option('ark_id_control_key', get_option('ark_control_key'));
+            delete_option('ark_control_key');
+        }
+    }
+
+    /**
      * Uninstalls the plugin.
      */
     public function hookUninstall()
@@ -143,18 +183,18 @@ where: http://example.com/ark:/99999/',
         $parameters = array(
             'protocol' => $post['ark_protocol'],
             'naan' => $post['ark_naan'],
-            'prefix' => $post['ark_prefix'] . $post['ark_prefix_collection'] . $post['ark_prefix_item'],
-            'suffix' => $post['ark_suffix'] . $post['ark_suffix_collection'] . $post['ark_suffix_item'],
-            'length' => $post['ark_length'],
-            'pad' => $post['ark_pad'],
-            'salt' => $post['ark_salt'],
-            'alphabet' => $post['ark_alphabet'],
-            'control_key' => $post['ark_control_key'],
+            'prefix' => $post['ark_id_prefix'] . $post['ark_id_prefix_collection'] . $post['ark_id_prefix_item'],
+            'suffix' => $post['ark_id_suffix'] . $post['ark_id_suffix_collection'] . $post['ark_id_suffix_item'],
+            'length' => $post['ark_id_length'],
+            'pad' => $post['ark_id_pad'],
+            'salt' => $post['ark_id_salt'],
+            'alphabet' => $post['ark_id_alphabet'],
+            'control_key' => $post['ark_id_control_key'],
             'command' => $post['ark_command'],
             // This value is used only to check if a zero may be prepended for
             // collections with the Omeka Id format.
-            'identifix' => $post['ark_prefix_collection'] === $post['ark_prefix_item']
-                && $post['ark_suffix_collection'] === $post['ark_suffix_item'],
+            'identifix' => $post['ark_id_prefix_collection'] === $post['ark_id_prefix_item']
+                && $post['ark_id_suffix_collection'] === $post['ark_id_suffix_item'],
         );
 
         try {
@@ -164,8 +204,8 @@ where: http://example.com/ark:/99999/',
         }
 
         // Save the previous salt if needed.
-        $salt = get_option('ark_salt');
-        $previousSalts = get_option('ark_previous_salts');
+        $salt = get_option('ark_id_salt');
+        $previousSalts = get_option('ark_id_previous_salts');
 
         // Clean the file variants.
         $post['ark_file_variants'] = preg_replace('/\s+/', ' ', trim($post['ark_file_variants']));
@@ -177,9 +217,9 @@ where: http://example.com/ark:/99999/',
         }
 
         // Save the previous salt if needed.
-        $newSalt = get_option('ark_salt');
+        $newSalt = get_option('ark_id_salt');
         if ($newSalt !== $salt && strlen($newSalt) > 0) {
-            set_option('ark_previous_salts', $previousSalts . PHP_EOL . $newSalt);
+            set_option('ark_id_previous_salts', $previousSalts . PHP_EOL . $newSalt);
         }
     }
 
@@ -516,29 +556,29 @@ where: http://example.com/ark:/99999/',
         if (empty($parameters)) {
             // A check is automatically done internally.
             if (is_null($recordType)) {
-                $prefix = get_option('ark_prefix') . get_option('ark_prefix_collection') . get_option('ark_prefix_item') ;
-                $suffix = get_option('ark_suffix') . get_option('ark_suffix_collection') . get_option('ark_suffix_item');
+                $prefix = get_option('ark_id_prefix') . get_option('ark_id_prefix_collection') . get_option('ark_id_prefix_item') ;
+                $suffix = get_option('ark_id_suffix') . get_option('ark_id_suffix_collection') . get_option('ark_id_suffix_item');
             }
             // Adding an ark to a specific record.
             else {
                 $recordType = strtolower($recordType);
-                $prefix = get_option('ark_prefix') . get_option('ark_prefix_' . $recordType);
-                $suffix = get_option('ark_suffix') . get_option('ark_suffix_' . $recordType);
+                $prefix = get_option('ark_id_prefix') . get_option('ark_id_prefix_' . $recordType);
+                $suffix = get_option('ark_id_suffix') . get_option('ark_id_suffix_' . $recordType);
             }
 
-            $identifix = get_option('ark_prefix_collection') === get_option('ark_prefix_item')
-                && get_option('ark_suffix_collection') === get_option('ark_suffix_item');
+            $identifix = get_option('ark_id_prefix_collection') === get_option('ark_id_prefix_item')
+                && get_option('ark_id_suffix_collection') === get_option('ark_id_suffix_item');
 
             $parameters = array(
                 'protocol' => get_option('ark_protocol'),
                 'naan' => get_option('ark_naan'),
                 'prefix' => $prefix,
                 'suffix' => $suffix,
-                'length' => get_option('ark_length'),
-                'pad' => get_option('ark_pad'),
-                'salt' => get_option('ark_salt'),
-                'alphabet' => get_option('ark_alphabet'),
-                'control_key' => get_option('ark_control_key'),
+                'length' => get_option('ark_id_length'),
+                'pad' => get_option('ark_id_pad'),
+                'salt' => get_option('ark_id_salt'),
+                'alphabet' => get_option('ark_id_alphabet'),
+                'control_key' => get_option('ark_id_control_key'),
                 'command' => get_option('ark_command'),
                 // This value is used only to check if a zero may be prepended
                 // for collections with the Omeka Id format.

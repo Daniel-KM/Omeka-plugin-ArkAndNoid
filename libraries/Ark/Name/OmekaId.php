@@ -133,7 +133,7 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
         $salt = $this->_getParameter('salt');
         if (empty($salt)) {
             $prepend = substr($this->_getAlphabet(), 0, 1);
-            if ((get_option('ark_prefix_collection') . $prepend) == get_option('ark_prefix_item')) {
+            if ((get_option('ark_id_prefix_collection') . $prepend) == get_option('ark_id_prefix_item')) {
                 $this->_errorMessage = __('The prefix of the collection cannot be near the prefix of the item.');
             }
         }

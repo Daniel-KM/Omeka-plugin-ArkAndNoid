@@ -83,10 +83,10 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
         set_option('ark_format_name', 'omeka_id');
 
         set_option('ark_naan', '12345');
-        set_option('ark_prefix_collection', '');
-        set_option('ark_length', 0);
-        set_option('ark_salt', '');
-        set_option('ark_control_key', false);
+        set_option('ark_id_prefix_collection', '');
+        set_option('ark_id_length', 0);
+        set_option('ark_id_salt', '');
+        set_option('ark_id_control_key', false);
 
         $this->_prepareRecords();
     }
