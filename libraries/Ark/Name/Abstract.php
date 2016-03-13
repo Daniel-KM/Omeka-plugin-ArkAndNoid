@@ -132,27 +132,7 @@ abstract class Ark_Name_Abstract
                 return;
             }
 
-            $salt = $this->_getParameter('salt');
-            if (empty($salt)) {
-                $message = __('No Ark created with the format "%s": the proposed ark "%s" is not unique [%s #%d].',
-                    get_class($this), $ark, get_class($this->_record), $this->_record->id);
-                _log('[Ark] ' . $message, Zend_Log::ERR);
-                return;
-            }
-
-            // When there is a salt, the ark is resalted.
-            $i = 0;
-            do {
-                $mainPart = $this->_salt($mainPart);
-                $ark = $protocol . '/' . $this->_prepareFullArk($mainPart);
-            }
-            while ($i++ < $this->_maxSaltLoop && $this->_arkExists($ark));
-            if ($i >= $this->_maxSaltLoop) {
-                $message = __('Unable to create a unique ark despite the salt. Check parameters of the format "%s" [%s #%d].',
-                    get_class($this), get_class($this->_record), $this->_record->id);
-                _log('[Ark] ' . $message, Zend_Log::ERR);
-                return;
-            }
+            return $this->_processDuplicate($ark, $mainPart);
         }
 
         return $ark;
@@ -162,6 +142,22 @@ abstract class Ark_Name_Abstract
      * The true function used to create the name part of the record.
      */
     abstract protected function _create();
+
+    /**
+     * Try to create another ark in case of a duplicate.
+     *
+     * @param string $ark The created ark.
+     * @param string $mainPart The created main part of the ark.
+     * @return string|null Another ark if possible.
+     */
+    protected function _processDuplicate($ark, $mainPart)
+    {
+        $message = __('Unable to create a unique ark.')
+            . ' ' . __('Check parameters of the format "%s" [%s #%d].',
+                get_class($this), get_class($this->_record), $this->_record->id);
+        _log('[Ark] ' . $message, Zend_Log::ERR);
+        return;
+    }
 
     /**
      * Helper to prepare an ark (without the protocol) from a partial ark.

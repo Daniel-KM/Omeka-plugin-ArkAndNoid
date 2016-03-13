@@ -38,6 +38,43 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
     }
 
     /**
+     * Try to create another ark in case of a duplicate.
+     *
+     * @param string $ark The created ark.
+     * @param string $mainPart The created main part of the ark.
+     * @return string|null Another ark if possible.
+     */
+    protected function _processDuplicate($ark, $mainPart)
+    {
+        $salt = $this->_getParameter('salt');
+        // When there is no salt, il's not possible to create another ark.
+        if (empty($salt)) {
+            $message = __('No Ark created with the format "%s": the proposed ark "%s" is not unique [%s #%d].',
+                get_class($this), $ark, get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::ERR);
+            return;
+        }
+
+        // Resalt the ark until it will become single.
+        $protocol = $this->_getParameter('protocol');
+        $i = 0;
+        do {
+            $mainPart = $this->_salt($mainPart);
+            $ark = $protocol . '/' . $this->_prepareFullArk($mainPart);
+        }
+        while ($i++ < $this->_maxSaltLoop && $this->_arkExists($ark));
+        if ($i >= $this->_maxSaltLoop) {
+            $message = __('Unable to create a unique ark despite the salt.')
+                . ' ' . __('Check parameters of the format "%s" [%s #%d].',
+                    get_class($this), get_class($this->_record), $this->_record->id);
+            _log('[Ark] ' . $message, Zend_Log::ERR);
+            return;
+        }
+
+        return $ark;
+    }
+
+    /**
      * Check parameters.
      *
      * @return boolean
