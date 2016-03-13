@@ -97,7 +97,9 @@ function create_arks($recordType, $private)
     // Get the list of records.
     $table = $db->getTable($recordType)->getTableName();
     $sql = "SELECT id FROM $table";
-    $sql .= $private ? ';' : ' WHERE public = 1;';
+    $sql .= $private ? '' : ' WHERE public = 1';
+    $sql .= ' ORDER BY id ASC;';
+
     $result = $db->fetchCol($sql);
 
     $total = count($result);
