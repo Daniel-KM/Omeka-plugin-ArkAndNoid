@@ -1,0 +1,11 @@
+<phpunit>
+    <testsuites>
+      <testsuite name="Noid Test Suite">
+        <directory>tests/suite</directory>
+        <exclude>tests/NoidTestCase.php</exclude>
+      </testsuite>
+      <testsuite name="Perl Random Test Suite">
+        <directory>tests/Perl_Random</directory>
+      </testsuite>
+    </testsuites>
+</phpunit>
