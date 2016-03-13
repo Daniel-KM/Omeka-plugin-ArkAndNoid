@@ -403,7 +403,7 @@ where: http://example.com/ark:/99999/',
             try {
                 $ark = $this->_getArkProcessor($format, $recordType);
             } catch (Ark_ArkException $e) {
-                _log('[Ark] ' . __($e->getMessage()));
+                _log('[Ark&Noid] ' . __($e->getMessage()));
                 throw $e;
             }
 

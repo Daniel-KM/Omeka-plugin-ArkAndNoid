@@ -34,11 +34,11 @@ class Ark_Name_Command extends Ark_Name_Abstract
         $this->_executeCommand($command, $status, $output, $errors);
 
         if (!empty($errors)) {
-            _log('[Ark] ' . __('Error output from ark command: %s', $errors), Zend_Log::WARN);
+            _log('[Ark&Noid] ' . __('Error output from ark command: %s', $errors), Zend_Log::WARN);
         }
 
         if ($status) {
-            _log('[Ark] ' . __('Ark command failed with status code %s.', $status), Zend_Log::ERR);
+            _log('[Ark&Noid] ' . __('Ark command failed with status code %s.', $status), Zend_Log::ERR);
             return;
         }
 

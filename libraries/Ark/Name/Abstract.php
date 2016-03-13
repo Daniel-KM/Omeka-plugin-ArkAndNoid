@@ -102,7 +102,7 @@ abstract class Ark_Name_Abstract
         if (empty($ark)) {
             $message = __('No Ark created: check your format "%s" [%s #%d].',
                 get_class($this), get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             return;
         }
 
@@ -115,7 +115,7 @@ abstract class Ark_Name_Abstract
         elseif (!$this->_checkFullArk($ark)) {
             $message = __('Ark "%s" is not correct: check your format "%s" and your processor [%s #%d].',
                 $ark, get_class($this), get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             return;
         }
 
@@ -128,7 +128,7 @@ abstract class Ark_Name_Abstract
             if ($this->_isFullArk) {
                 $message = __('The proposed ark "%s" is not unique [%s #%d].',
                     $ark, get_class($this->_record), $this->_record->id);
-                _log('[Ark] ' . $message, Zend_Log::ERR);
+                _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
                 return;
             }
 
@@ -155,7 +155,7 @@ abstract class Ark_Name_Abstract
         $message = __('Unable to create a unique ark.')
             . ' ' . __('Check parameters of the format "%s" [%s #%d].',
                 get_class($this), get_class($this->_record), $this->_record->id);
-        _log('[Ark] ' . $message, Zend_Log::ERR);
+        _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
         return;
     }
 
@@ -263,7 +263,7 @@ abstract class Ark_Name_Abstract
             if (strlen($string) > $length) {
                 $message = __('The Ark format "%s" requires a static length of %d characters, but the current ark is %d characters long [%s #%d].',
                     get_class($this), $length, strlen($string), get_class($this->_record), $this->_record->id);
-                _log('[Ark] ' . $message, Zend_Log::WARN);
+                _log('[Ark&Noid] ' . $message, Zend_Log::WARN);
                 return $string;
             }
             $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
@@ -297,7 +297,7 @@ abstract class Ark_Name_Abstract
             // This can occurs too when the conversion creates a small number.
             $message = __('The Ark format "%s" requires a static length of %d characters, but the hash creates a %d characters long [%s #%d].',
                 get_class($this), $length, strlen($salted), get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::WARN);
+            _log('[Ark&Noid] ' . $message, Zend_Log::WARN);
 
             $pad = $this->_getParameter('pad') ?: substr($this->_getAlphabet(), 0, 1);
             $salted = str_pad($salted, $length, $pad, STR_PAD_LEFT);

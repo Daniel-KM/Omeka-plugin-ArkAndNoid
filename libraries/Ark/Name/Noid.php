@@ -31,7 +31,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
         $noid = $this->_openDatabase(Noid::DB_WRITE);
         if (empty($noid)) {
             $message = __('Cannot open database: %s', Noid::errmsg(null, 1) ?: __('No database'));
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             return;
         }
 
@@ -74,7 +74,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
         if (strlen($ark) == '') {
             $message = __('Cannot create an Ark for %s #%d: %s',
                 get_class($record), $record->id, Noid::errmsg($noid));
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             Noid::dbclose($noid);
             return;
         }
@@ -85,7 +85,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
         if (empty($result)) {
             $message = __('Ark set, but not bound [%s, %s #%d]: %s',
                 $ark, get_class($record), $record->id, Noid::errmsg($noid));
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
         }
 
         // Save the reverse bind on Omeka id to find it instantly, as a "note".
@@ -94,7 +94,7 @@ class Ark_Name_Noid extends Ark_Name_Abstract
         if (empty($result)) {
             $message = __('Ark set, but no reverse bind [%s, %s #%d]: %s',
                 $ark, get_class($record), $record->id, Noid::errmsg($noid));
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
         }
 
         Noid::dbclose($noid);

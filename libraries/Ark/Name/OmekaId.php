@@ -51,7 +51,7 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
         if (empty($salt)) {
             $message = __('No Ark created with the format "%s": the proposed ark "%s" is not unique [%s #%d].',
                 get_class($this), $ark, get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             return;
         }
 
@@ -67,7 +67,7 @@ class Ark_Name_OmekaId extends Ark_Name_Abstract
             $message = __('Unable to create a unique ark despite the salt.')
                 . ' ' . __('Check parameters of the format "%s" [%s #%d].',
                     get_class($this), get_class($this->_record), $this->_record->id);
-            _log('[Ark] ' . $message, Zend_Log::ERR);
+            _log('[Ark&Noid] ' . $message, Zend_Log::ERR);
             return;
         }
 
