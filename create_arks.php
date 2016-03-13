@@ -119,6 +119,10 @@ function create_arks($recordType, $private)
             // Need to reload it to get the ark.
             $record = get_record_by_id($recordType, $recordId);
             $ark = $view->Ark($record);
+            if (strlen($ark) === 0) {
+                echo ": ERROR: Unable to create an ark. Check logs, parameters and rights." . PHP_EOL;
+                exit(1);
+            }
             echo ": $ark (new)" . PHP_EOL;
             $new++;
         }
