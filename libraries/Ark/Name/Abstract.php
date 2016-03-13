@@ -421,6 +421,17 @@ abstract class Ark_Name_Abstract
     }
 
     /**
+     * Normalize the name of the current user.
+     */
+    protected function _getContact()
+    {
+        $user = current_user();
+        return empty($user)
+            ? __('Unknown user')
+            : $user->name . ' <' . $user->email . '>';
+    }
+
+    /**
      * Execute a external command and return results by reference.
      *
      * @see Omeka_File_Derivative_Strategy_ExternalImageMagick().

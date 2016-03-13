@@ -1,3 +1,6 @@
+<?php
+$attribs = $isNoidReady ? array('disable' => true) : null;
+?>
 <p class="explanation">
 <?php
     echo __('Ark allows to creates and manages unique, universel and persistent ark identifiers.') . '<br />';
@@ -6,6 +9,14 @@
         '<a href="https://confluence.ucop.edu/display/Curation/ARK">', '</a>');
 ?>
 </p>
+<?php if ($isNoidReady): ?>
+<p class="explanation">
+    <strong><?php echo __('The database for "Noid" is ready.'); ?></strong>
+</p>
+<p class="explanation">
+    <?php echo __('For security purposes, to change some parameters, the database should be moved manually and this page reloaded.'); ?>
+</p>
+<?php endif; ?>
 <p class="explanation"><strong><?php echo __('Warning'); ?></strong>
     <?php echo __('Once set and arks made public, it is not recommended to change these parameters in order to keep the consistency and the sustainability of the names.'); ?>
     <?php echo __('Anyway, once created, an ark is never modified, even if these parameters are changed, unless the ark is manually removed from the record.'); ?>
@@ -16,10 +27,10 @@
             <?php echo $this->formLabel('ark_protocol', __('Protocol')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_protocol', get_option('ark_protocol'), null); ?>
+            <?php echo $this->formText('ark_protocol', get_option('ark_protocol'), $attribs); ?>
             <p class="explanation">
-                <?php echo __('The "protocol" of ark is "ark:".'); ?>
-                <?php echo __('Without an authority number, another "protocol" must be specified, for example "record" or "document".'); ?>
+                <?php echo __('The "protocol" or label of an ark is "ark:".'); ?>
+                <?php echo __('Without an authority number, another label must be specified, for example "record" or "document".'); ?>
             </p>
         </div>
     </div>
@@ -28,11 +39,36 @@
             <?php echo $this->formLabel('ark_naan', __('Name Assigning Authority Number (NAAN)')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formText('ark_naan', get_option('ark_naan'), null); ?>
+            <?php echo $this->formText('ark_naan', get_option('ark_naan'), $attribs); ?>
             <p class="explanation">
                 <?php echo __('This unique number, usually with five digits, is assigned for free by the California Digital Library to any institution with a historical or archival purposes.'); ?>
                 <?php echo __('The naan "12345" is a special one and serves for example purposes and "99999" is for test purposes.'); ?>
                 <?php echo __('If not set, the urls will have the non standard format "my_protocol/:name".'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_naa', __('Name Assigning Authority (NAA)')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_naa', get_option('ark_naa'), $attribs); ?>
+            <p class="explanation">
+                <?php echo __('This naa is the string equivalent of the naan, for example "example.org" or "My Institution".'); ?>
+                <?php echo __('Naa and subnaa are used only with arks.'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_subnaa', __('Sub NAA')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_subnaa', get_option('ark_subnaa'), $attribs); ?>
+            <p class="explanation">
+                <?php echo __('This subnaa is a part of the institution, a service or a center, for example a library.'); ?>
+                <?php echo __('It is locally determined and possibly structured subauthority string (e.g., "lib/digital", "oac", "ucb/dpg", "practice_area").'); ?>
+                <?php echo __('It is required by ark to set long term identifiers.'); ?>
             </p>
         </div>
     </div>
@@ -48,6 +84,53 @@
             ?>
             <p class="explanation">
                 <?php echo __('Select the format used to create arks.'); ?>
+            </p>
+        </div>
+    </div>
+</fieldset>
+<fieldset id="fieldset-ark-format-noid"><legend><i><?php echo __('Parameters for the format "Noid for php"'); ?></i></legend>
+    <?php if ($isDatabaseCreated): ?>
+    <p class="explanation">
+        <?php echo __('The database is already created.'); ?>
+    </p>
+    <?php endif; ?>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_noid_database', __('Full path to the database')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_noid_database', get_option('ark_noid_database'), $attribs); ?>
+            <p class="explanation">
+                <?php echo __('For long term management, noids are saved in a specific base, independantly of Omeka.'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_create_database', __('Create the database')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formCheckbox('ark_create_database', null, $attribs); ?>
+            <p class="explanation">
+                    <?php echo __('Check the box to create the database.'); ?>
+                    <?php echo __('For security, deletion is possible only manually.'); ?>
+            </p>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('ark_noid_template', __('Template of the noids')); ?>
+        </div>
+        <div class='inputs five columns omega'>
+            <?php echo $this->formText('ark_noid_template', get_option('ark_noid_template'), $attribs); ?>
+            <?php if ($isDatabaseCreated): ?>
+            <p class="explanation">
+                <?php echo ' ' . __('The template cannot be changed once the  database is created.'); ?>
+            </p>
+            <?php endif; ?>
+            <p class="explanation">
+                <?php echo __('The template define the format of the identifiers.'); ?>
+                <?php echo __('See the %sreadme%s for explanation and examples.', '<a href="https://github.com/Daniel-KM/ArkAndNoid4Omeka#Presentation-of-Noid">', '</a>'); ?>
             </p>
         </div>
     </div>
@@ -348,3 +431,4 @@
         </div>
     </div>
 </fieldset>
+<?php echo js_tag('ark-config-form'); ?>

@@ -11,6 +11,9 @@ reference to the Noah's ark (digital documents will have a long life) and to the
 world of archives (Omeka can be an institutional archive) too. Optionally, the
 identifiers can be resolved via a service as [N2T], the Name-to-Thing Resolver.
 
+Arks may be built with the utility [Noid], that creates nice opaque identifiers,
+that is integrated too via the library [Noid4Php].
+
 See a living example in the [Bibliothèque patrimoniale] of [Mines ParisTech]
 (click on "Notice" to display the record of any document).
 
@@ -77,7 +80,9 @@ systems [PURL], [DOI], [Handle], etc. (see the full [CDL example]):
                                 urn:13030:tqb3kh97gh8w          id schemes.
 ```
 
-For more informations about persistent identifiers, see this [overview].
+For more informations about persistent identifiers, see this [overview]. The
+full [specification] of ark can be checked too.
+
 
 All arks are saved as Dublin Core Identifier, as recommended. This allows to
 make a check to avoid duplicates, that are forbidden. This applies to collection
@@ -89,6 +94,51 @@ Ark can be displayed by default instead of the default internal ids. This plugin
 is fully compatible with [Clean Url]: an ark can be used for machine purposes
 and a clean url for true humans and for the natural referencement by search
 engines.
+
+
+Presentation of Noid
+--------------------
+
+[NOID] allows to create nice opaque identifier, to bind it to an object (the
+url here), and to manage them in the long term. Only the template is explained
+here.
+
+A template is formed by :
+  - a prefix that defines a subset, a list of ark minted by a subpart of an
+  organization, or a specific set (may be empty, or commonly 1 to 5 characters).
+  - a ".",
+  - a mode: "s" for sequential, "z" for unlimited sequential, or "r" for random,
+  - a mask: composed from one or more of these character repertoires: "d", "e",
+  "i", "x", "v", "E", "w" "c" and "l" (see below).
+  - and finally a "k" (key for control), if wanted.');
+
+The default template in Omeka is "`.zek`": unlimited number of sequential names,
+with a control key, like "12345/92" and "12345/bkp6" for the NAAN "12345".
+
+The alphabets are these ones:
+  - Standard (from Perl script 0.424):
+    - "d": { 0-9 x } cardinality 10
+    - "e": { 1-9 b-z } - {l, vowels} cardinality 29
+  - Proposed in Perl script 0.424:
+    - "i": { 0-9 x } cardinality 11
+    - "x": { 0-9 a-f _ } cardinality 17
+    - "v": { 0-9 a-z _ } cardinality 37
+    - "E": { 1-9 b-z B-Z } - {l, vowels} cardinality 47
+    - "w": { 0-9 a-z A-Z # * + @ _ } cardinality 67
+  - Proposed in Perl script 0.424, but not accepted for Ark:
+    - "c": Visible ASCII - { % - . / \ } cardinality 89
+  - Not proposed in the Perl script, but compatible with Ark and useful because
+  the longest with only alphanumeric characters:
+    - "l" { 0-9 a-z A-Z } - { l } cardinality 61
+
+The prime cardinality allows to set an efficient check character ("k") against
+a single-character error and a transposition of two single characters.
+
+So, a template like "`a.rlllk`" allows to create a fixed-size noid for 226981
+records and the template "`b.rllllk`" allows to create 13845841 noids: large
+enough in most cases.
+
+See other [templates] for more explanation and examples.
 
 
 Installation
@@ -164,6 +214,9 @@ and, more generally, to use and operate it in the same conditions of security.
 This Agreement may be freely reproduced and published, provided it is not
 altered, and that no provisions are either added or removed herefrom.
 
+The original Noid utility was published under BSD. The php version is published
+under [CeCILL-B v1], compatible with BSD. See [Noid4Php] for further details.
+
 
 Contact
 -------
@@ -186,6 +239,8 @@ Copyright
 [ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
 [Cool URIs]: https://www.w3.org/TR/cooluris
 [N2T]: http://n2t.org
+[Noid]: https://wiki.ucop.edu/display/Curation/NOID
+[Noid4Php]: https://github.com/Daniel-KM/Noid4Php
 [Bibliothèque patrimoniale]: https://patrimoine.mines-paristech.fr
 [Mines ParisTech]: http://mines-paristech.fr
 [California Digital Library]: http://www.cdlib.org
@@ -195,10 +250,13 @@ Copyright
 [Handle]: http://handle.net
 [CDL example]: https://wiki.ucop.edu/display/DataCite/Identifier+Concepts+and+Practices+at+the+California+Digital+Library
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
+[specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
+[templates]: https://metacpan.org/pod/distribution/Noid/noid#TEMPLATES
 [plugin issues]: https://github.com/Daniel-KM/ArkForOmeka/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
 [OSI]: http://opensource.org
+[CeCILL-B v1]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt
 [Daniel-KM]: https://github.com/Daniel-KM "Daniel Berthereau"

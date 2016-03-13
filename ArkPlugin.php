@@ -47,7 +47,11 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_protocol' => 'ark:',
         // 12345 means example and 99999 means test.
         'ark_naan' => '99999',
-        'ark_format_name' => 'omeka_id',
+        'ark_naa' => 'example.org',
+        'ark_subnaa' => 'sub',
+        'ark_format_name' => 'noid',
+        'ark_noid_database' => '',
+        'ark_noid_template' => '.zek',
         'ark_id_prefix' => '',
         'ark_id_prefix_collection' => '',
         'ark_id_prefix_item' => '',
@@ -101,6 +105,8 @@ where: http://example.com/ark:/99999/',
         $this->_options['ark_display_public'] = str_replace('WEB_ROOT', WEB_ROOT, $this->_options['ark_display_public']);
         $this->_options['ark_display_admin'] = str_replace('WEB_ROOT', WEB_ROOT, $this->_options['ark_display_admin']);
 
+        $this->_options['ark_noid_database'] = FILES_DIR . DIRECTORY_SEPARATOR . 'arkandnoid';
+
         $this->_installOptions();
     }
 
@@ -116,6 +122,10 @@ where: http://example.com/ark:/99999/',
         if (version_compare($oldVersion, '2.4', '<')) {
             delete_option('ark_allow_short_urls');
             set_option('ark_protocol', $this->_options['ark_protocol']);
+            set_option('ark_naa', $this->_options['naa']);
+            set_option('ark_subnaa', $this->_options['subnaa']);
+            set_option('ark_noid_database', FILES_DIR . DIRECTORY_SEPARATOR . 'arkandnoid');
+            set_option('ark_noid_template', $this->_options['ark_noid_template']);
             set_option('ark_id_prefix', get_option('ark_prefix'));
             delete_option('ark_prefix');
             set_option('ark_id_prefix_collection', get_option('ark_prefix_collection'));
@@ -162,6 +172,8 @@ where: http://example.com/ark:/99999/',
             array(
                 'format_names' => $this->_getListOfFormats('ark_format_names'),
                 'format_qualifiers' => $this->_getListOfFormats('ark_format_qualifiers'),
+                'isDatabaseCreated' => $this->_isDatabaseCreated(),
+                'isNoidReady' => get_option('ark_format_name') == 'noid' && $this->_isDatabaseCreated(),
             )
         );
     }
@@ -175,6 +187,14 @@ where: http://example.com/ark:/99999/',
     {
         $post = $args['post'];
 
+        // Fill the disabled fields to avoid notices.
+        $post['ark_protocol'] = isset($post['ark_protocol']) ? $post['ark_protocol'] : get_option($post['ark_protocol']);
+        $post['ark_naan'] = isset($post['ark_naan']) ? $post['ark_naan'] : get_option('ark_naan');
+        $post['ark_naa'] = isset($post['ark_naa']) ? $post['ark_naa'] : get_option('ark_naa');
+        $post['ark_subnaa'] = isset($post['ark_subnaa']) ? $post['ark_subnaa'] : get_option('ark_subnaa');
+        $post['ark_noid_database'] = isset($post['ark_noid_database']) ? $post['ark_noid_database'] : get_option('ark_noid_database');
+        $post['ark_noid_template'] = isset($post['ark_noid_template']) ? $post['ark_noid_template'] : get_option('ark_noid_template');
+
         // Special check for prefix/suffix.
         $format = $post['ark_format_name'];
 
@@ -183,6 +203,12 @@ where: http://example.com/ark:/99999/',
         $parameters = array(
             'protocol' => $post['ark_protocol'],
             'naan' => $post['ark_naan'],
+            'naa' => $post['ark_naa'],
+            'subnaa' => $post['ark_subnaa'],
+            // Parameters for Noid.
+            'database' => $post['ark_noid_database'],
+            'template' => $post['ark_noid_template'],
+            // Parameters for Omeka Id.
             'prefix' => $post['ark_id_prefix'] . $post['ark_id_prefix_collection'] . $post['ark_id_prefix_item'],
             'suffix' => $post['ark_id_suffix'] . $post['ark_id_suffix_collection'] . $post['ark_id_suffix_item'],
             'length' => $post['ark_id_length'],
@@ -190,6 +216,7 @@ where: http://example.com/ark:/99999/',
             'salt' => $post['ark_id_salt'],
             'alphabet' => $post['ark_id_alphabet'],
             'control_key' => $post['ark_id_control_key'],
+            // Parameters for Command.
             'command' => $post['ark_command'],
             // This value is used only to check if a zero may be prepended for
             // collections with the Omeka Id format.
@@ -201,6 +228,25 @@ where: http://example.com/ark:/99999/',
             $processor = $this->_getArkProcessor($format, null, $parameters);
         } catch (Ark_ArkException $e) {
             throw new Omeka_Validate_Exception($e->getMessage());
+        }
+
+        // Check if the database is created for the format Noid.
+        if ($post['ark_format_name'] == 'noid') {
+            if ($post['ark_create_database']) {
+                if ($processor->isDatabaseCreated()) {
+                    throw new Omeka_Validate_Exception(__('The database exists already: remove it manually or change the path to create a new one.'));
+                }
+
+                $result = $processor->createDatabase();
+                if ($result !== true) {
+                    throw new Omeka_Validate_Exception(__('The database cannot be created: %s', $result));
+                }
+            }
+            // Check if the database exists.
+            elseif (!$processor->isDatabaseCreated()) {
+                throw new Omeka_Validate_Exception(__('With format "Noid", the database should be created: check the box "Create the database".'));
+            }
+            // Nothing to do else: the database should be created.
         }
 
         // Save the previous salt if needed.
@@ -385,13 +431,17 @@ where: http://example.com/ark:/99999/',
     public function filterArkFormatNames($formatNames)
     {
         // Available default formats in the plugin.
+        $formatNames['noid'] = array(
+            'class' => 'Ark_Name_Noid',
+            'description' => __('Noid for php'),
+        );
         $formatNames['omeka_id'] = array(
             'class' => 'Ark_Name_OmekaId',
-            'description' => __('Omeka Id'),
+            'description' => __('Omeka Id derivative'),
         );
         $formatNames['command'] = array(
             'class' => 'Ark_Name_Command',
-            'description' => __('Command, like NOID'),
+            'description' => __('Command, like noid for perl'),
         );
         return $formatNames;
     }
@@ -450,6 +500,24 @@ where: http://example.com/ark:/99999/',
             }
         }
         return $values;
+    }
+
+    /**
+     * Determine if a local base is used and already created (Noid for php).
+     *
+     * @return boolean
+     */
+    protected function _isDatabaseCreated()
+    {
+        $format = get_option('ark_format_name');
+        if ($format == 'noid') {
+            $database = get_option('ark_noid_database');
+            if (!empty($database)) {
+                $processor = $this->_getArkProcessor($format);
+                return $processor->isDatabaseCreated();
+            }
+        }
+        return false;
     }
 
     /**
@@ -572,6 +640,12 @@ where: http://example.com/ark:/99999/',
             $parameters = array(
                 'protocol' => get_option('ark_protocol'),
                 'naan' => get_option('ark_naan'),
+                'naa' => get_option('ark_naa'),
+                'subnaa' => get_option('ark_subnaa'),
+                // Parameters for Noid.
+                'database' => get_option('ark_noid_database'),
+                'template' => get_option('ark_noid_template'),
+                // Parameters for Omeka Id.
                 'prefix' => $prefix,
                 'suffix' => $suffix,
                 'length' => get_option('ark_id_length'),
@@ -579,6 +653,7 @@ where: http://example.com/ark:/99999/',
                 'salt' => get_option('ark_id_salt'),
                 'alphabet' => get_option('ark_id_alphabet'),
                 'control_key' => get_option('ark_id_control_key'),
+                // Parameters for Command.
                 'command' => get_option('ark_command'),
                 // This value is used only to check if a zero may be prepended
                 // for collections with the Omeka Id format.
