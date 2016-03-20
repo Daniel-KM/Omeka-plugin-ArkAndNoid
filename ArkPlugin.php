@@ -49,6 +49,7 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
         'ark_naan' => '99999',
         'ark_naa' => 'example.org',
         'ark_subnaa' => 'sub',
+        'ark_web_root' => WEB_ROOT,
         'ark_format_name' => 'noid',
         'ark_noid_database' => '',
         'ark_noid_template' => '.zek',
@@ -151,6 +152,10 @@ where: http://example.com/ark:/99999/',
             set_option('ark_id_control_key', get_option('ark_control_key'));
             delete_option('ark_control_key');
         }
+
+        if (version_compare($oldVersion, '2.5.1', '<')) {
+            set_option('ark_web_root', $this->_options['ark_web_root']);
+        }
     }
 
     /**
@@ -194,6 +199,8 @@ where: http://example.com/ark:/99999/',
         $post['ark_subnaa'] = isset($post['ark_subnaa']) ? $post['ark_subnaa'] : get_option('ark_subnaa');
         $post['ark_noid_database'] = isset($post['ark_noid_database']) ? $post['ark_noid_database'] : get_option('ark_noid_database');
         $post['ark_noid_template'] = isset($post['ark_noid_template']) ? $post['ark_noid_template'] : get_option('ark_noid_template');
+
+        $post['ark_web_root'] = empty($post['ark_web_root']) ? $this->_options['ark_web_root'] : $post['ark_web_root'];
 
         // Special check for prefix/suffix.
         $format = $post['ark_format_name'];

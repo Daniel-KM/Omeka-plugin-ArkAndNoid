@@ -37,7 +37,33 @@ class Ark_Name_Noid extends Ark_Name_Abstract
 
         // Default public url of Omeka.
         set_theme_base_url('public');
-        $recordUrl = absolute_url($record->getRecordUrl(), 'id');
+        $recordUrl = $record->getRecordUrl();
+        // TODO Routes should be loaded for background process, else exception.
+        try {
+            $recordUrl = absolute_url($recordUrl, 'id');
+        } catch (Exception $e) {
+            // An exception means a background process, so routes are not
+            // defined, so the web root uses the special option.
+            $webRoot = get_option('ark_web_root');
+            if (empty($webRoot)) {
+                $message = __('Unable to define a route for ark, because the option "ark_web_root" is not defined.');
+                if (!empty($this->_errorMessage)) {
+                    $message .= PHP_EOL . $this->_errorMessage;
+                }
+                throw new Ark_ArkException($message);
+            }
+            if (is_array($recordUrl)) {
+                $recordUrl = '/' . $recordUrl['controller'] . '/' . $recordUrl['action'] . '/' . $recordUrl['id'];
+            }
+            elseif (!is_string($recordUrl)) {
+                $message = __('Unable to define a route for ark: %s.', $e->getMessage());
+                if (!empty($this->_errorMessage)) {
+                    $message .= PHP_EOL . $this->_errorMessage;
+                }
+                throw new Ark_ArkException($message);
+            }
+            $recordUrl = $webRoot . $recordUrl;
+        }
         revert_theme_base_url();
 
         // Check if the url is already set (only the Omeka id: the other ids are
