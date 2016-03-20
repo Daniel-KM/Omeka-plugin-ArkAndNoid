@@ -148,11 +148,16 @@ Uncompress files and rename plugin folder "Ark".
 
 Then install it like any other Omeka plugin and follow the config instructions.
 
-* Note
+* Notes
 
 With the format "Omeka Id",  the php extension "BCMath" must be enabled. This is
 the case on the majority of the servers (based on Debian or Windows), else
 install the  module "php-bcmath", or don't use this format.
+
+With the format "Noid for php", the plugin requires the php extension "dba",
+that uses to be installed by default with Php, and the BerkeleyDB library, that
+is installed by default too on standard web servers and any Linux distribution
+(package libdb5.3 on Debian), because it is used in many basic tools.
 
 
 Usage
