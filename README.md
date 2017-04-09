@@ -7,7 +7,7 @@ simple number of a row in a table of the database.
 
 Arks are short, opaque, meaningless, universal, unique and persistent ids for
 any records. The acronym "ark" means "Archival Resource Key". This is a
-reference to the Noah's ark (digital documents will have a long life) and to the
+reference to the Noah’s ark (digital documents will have a long life) and to the
 world of archives (Omeka can be an institutional archive) too. Optionally, the
 identifiers can be resolved via a service as [N2T], the Name-to-Thing Resolver.
 
@@ -17,7 +17,7 @@ that is integrated too via the library [Noid4Php].
 See a living example in the [Bibliothèque patrimoniale] of [Mines ParisTech]
 (click on "Notice" to display the record of any document).
 
-If you don't have an authority number, the plugin will create a non standard
+If you don’t have an authority number, the plugin will create a non standard
 ark, but nevertheless a unique and opaque identifier that can be managed.
 
 
@@ -103,40 +103,40 @@ Presentation of Noid
 url here), and to manage them in the long term. Only the template is explained
 here.
 
-A template is formed by :
-  - a prefix that defines a subset, a list of ark minted by a subpart of an
-  organization, or a specific set (may be empty, or commonly 1 to 5 characters).
-  - a ".",
-  - a mode: "s" for sequential, "z" for unlimited sequential, or "r" for random,
-  - a mask: composed from one or more of these character repertoires: "d", "e",
-  "i", "x", "v", "E", "w" "c" and "l" (see below).
-  - and finally a "k" (key for control), if wanted.');
+- A template is formed by :
+    - a prefix that defines a subset, a list of ark minted by a subpart of an
+    organization, or a specific set (may be empty, or commonly 1 to 5 characters).
+    - a `.`,
+    - a mode: `s` for sequential, `z` for unlimited sequential, or `r` for random,
+    - a mask: composed from one or more of these character repertoires: `d`, `e`,
+    `i`, `x`, `v`, `E`, `w` `c` and `l` (see below).
+    - and finally a `k` (key for control), if wanted.
 
-The default template in Omeka is "`.zek`": unlimited number of sequential names,
-with a control key, like "12345/92" and "12345/bkp6" for the NAAN "12345".
+- The character repertoires are:
+    - Standard:
+        - `d`: `{ 0-9 x }` cardinality 10
+        - `e`: `{ 1-9 b-z }` - `{l, vowels}` cardinality 29
+    - Proposed:
+        - `i`: `{ 0-9 x }` cardinality 11
+        - `x`: `{ 0-9 a-f _ }` cardinality 17
+        - `v`: `{ 0-9 a-z _ }` cardinality 37
+        - `E`: `{ 1-9 b-z B-Z }` - `{l, vowels}` cardinality 47
+        - `w`: `{ 0-9 a-z A-Z # * + @ _ }` cardinality 67
+    - Proposed, but not accepted for Ark:
+        - `c`: Visible ASCII - `{ % - . / \ }` cardinality 89
+    - Not proposed in the Perl script, but compatible with Ark and useful
+    because the longest with only alphanumeric characters:
+        - `l`: `{ 0-9 a-z A-Z }` - `{ l }` cardinality 61
 
-The alphabets are these ones:
-  - Standard (from Perl script 0.424):
-   - "d": { 0-9 x } cardinality 10
-   - "e": { 1-9 b-z } - {l, vowels} cardinality 29
-  - Proposed in Perl script 0.424:
-   - "i": { 0-9 x } cardinality 11
-   - "x": { 0-9 a-f _ } cardinality 17
-   - "v": { 0-9 a-z _ } cardinality 37
-   - "E": { 1-9 b-z B-Z } - {l, vowels} cardinality 47
-   - "w": { 0-9 a-z A-Z # * + @ _ } cardinality 67
-  - Proposed in Perl script 0.424, but not accepted for Ark:
-   - "c": Visible ASCII - { % - . / \ } cardinality 89
-  - Not proposed in the Perl script, but compatible with Ark and useful because
-  the longest with only alphanumeric characters:
-   - "l": { 0-9 a-z A-Z } - { l } cardinality 61
-
-The prime cardinality allows to set an efficient check character ("k") against
+The prime cardinality allows to set an efficient check character (`k`) against
 a single-character error and a transposition of two single characters.
 
-So, a template like "`a.rlllk`" allows to create a fixed-size noid for 226981
-records and the template "`b.rllllk`" allows to create 13845841 noids: large
+So, a template like `a.rlllk` allows to create a fixed-size noid for 226981
+records and the template `b.rllllk` allows to create 13845841 noids: large
 enough in most cases.
+
+The default template in Omeka is `.zek`: unlimited number of sequential names,
+with a control key, like `12345/92` and `12345/bkp6` for the NAAN `12345`.
 
 See other [templates] for more explanation and examples.
 
@@ -148,11 +148,11 @@ Uncompress files and rename plugin folder "Ark".
 
 Then install it like any other Omeka plugin and follow the config instructions.
 
-* Notes
+### Notes
 
 With the format "Omeka Id",  the php extension "BCMath" must be enabled. This is
 the case on the majority of the servers (based on Debian or Windows), else
-install the  module "php-bcmath", or don't use this format.
+install the  module "php-bcmath", or don’t use this format.
 
 With the format "Noid for php", the plugin requires the php extension "dba",
 that uses to be installed by default with Php, and the BerkeleyDB library, that
@@ -182,7 +182,7 @@ php -f plugins/Ark/create_arks.php
 
 ** IMPORTANT **
 
-Even if a check is done after creation of an ark to avoid any duplicate, it's
+Even if a check is done after creation of an ark to avoid any duplicate, it’s
 not recommended to change parameters once records are public in order to keep
 the consistency and the sustainability of the archive.
 
@@ -192,8 +192,11 @@ Warning
 
 Use it at your own risk.
 
-It's always recommended to backup your files and database regularly so you can
-roll back if needed.
+It’s always recommended to backup your files and your databases and to check
+your archives regularly so you can roll back if needed.
+
+Don't forget to save the noid database, located in `/files/arkandnoid` by
+default.
 
 
 Troubleshooting
@@ -210,11 +213,11 @@ This plugin is published under the [CeCILL v2.1] licence, compatible with
 
 In consideration of access to the source code and the rights to copy, modify and
 redistribute granted by the license, users are provided only with a limited
-warranty and the software's author, the holder of the economic rights, and the
+warranty and the software’s author, the holder of the economic rights, and the
 successive licensors only have limited liability.
 
 In this respect, the risks associated with loading, using, modifying and/or
-developing or reproducing the software by the user are brought to the user's
+developing or reproducing the software by the user are brought to the user’s
 attention, given its Free Software status, which may make it complicated to use,
 with the result that its use is reserved for developers and experienced
 professionals having in-depth computer knowledge. Users are therefore encouraged
@@ -241,7 +244,7 @@ Second version of this plugin has been built for [Mines ParisTech].
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015-2016
+* Copyright Daniel Berthereau, 2015-2017
 
 
 [Ark & Noid]: https://github.com/Daniel-KM/ArkAndNoid4Omeka
