@@ -159,6 +159,11 @@ that uses to be installed by default with Php, and the BerkeleyDB library, that
 is installed by default too on standard web servers and any Linux distribution
 (package libdb5.3 on Debian), because it is used in many basic tools.
 
+** WARNING **
+
+The noid library wasn’t tested for php 7.1, where the output of rand() and
+srand() changed.
+
 
 Usage
 -----
