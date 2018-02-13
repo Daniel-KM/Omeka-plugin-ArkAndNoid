@@ -266,7 +266,7 @@ Copyright
 [PURL]: https://purl.org
 [DOI]: http://www.doi.org
 [Handle]: http://handle.net
-[CDL example]: https://wiki.ucop.edu/display/DataCite/Identifier+Concepts+and+Practices+at+the+California+Digital+Library
+[CDL example]: https://ezid.cdlib.org/learn/id_concepts
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
 [specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
