@@ -15,16 +15,17 @@
  * underlying 64-bit code (may not work with some 64-bit Windows).
  *
  * Currently, only the output of integers (via int(rand())) is managed without
- * errors for length until 32 bits. The function "int_rand()" is specially
- * designed for this case: it gets rand() as integer without useless internal
- * rounding.
+ * difference between perl 5.20 and php 5.3.15 or greater, until 32 bits, the
+ * perl limit. The function "int_rand()" is specially designed for this case: it
+ * gets rand() as integer without useless internal rounding.
  *
  * For float numbers, the port works fine for rand(1) or a length below 13 bits
  * (8192), but results are incorrect for length larger (the last decimal may
- * differ of 1 to 10). The main difficulty is to round the float value.
- * Furthermore, Perl uses 15 digits and Php 14 digits to represent a float. A
- * special method is provided to get the rand() float value with 15 digits:
- * "string_rand()". Nevertheless, this part of the tool should be corrected.
+ * differ of 1 to 10). Between perl and php, the main difficulty is to round the
+ * float value. Furthermore, Perl uses 15 digits and Php 14 digits to represent
+ * a float. A special method is provided to get the rand() float value with 15
+ * digits: "string_rand()". Nevertheless, this part of the tool should be
+ * corrected.
  *
  * This is a singleton so that the same sequence is available anywhere. Hence,
  * it should be initialized when needed:
@@ -33,11 +34,12 @@
  *     $perlRandom->srand(1234567890);
  *     $random = $perlRandom->int_rand(293);
  *
- * Of course, the performance is bad because this is not a native function., but
+ * Of course, the performance is bad because this is not a native function, but
  * this is not the main aim of this tool.
  *
  * Note:
- * On Php, rand() and mt_srand() create stable sequences since 5.3.15.
+ * On Php, rand() and mt_srand() create stable sequences since 5.3.15 and were
+ * improved in php 7.1 (see https://secure.php.net/manual/en/migration71.incompatible.php#migration71.incompatible.fixes-to-mt_rand-algorithm).
  * On Perl, rand() creates stable sequences since 5.20.0.
  *
  * @todo Manage float random numbers from 8193 until 32 bits (Perl limit).
@@ -75,9 +77,7 @@ class Perl_Random
 
         // Check if BCMath is installed.
         if (!extension_loaded('bcmath')) {
-            if (!function_exists('dl') || !dl('bcmath.so')) {
-                throw new RuntimeException('Perl_Random requires the extension "BCMath".');
-            }
+            throw new RuntimeException('Perl_Random requires the extension "BCMath".');
         }
     }
 
@@ -304,7 +304,7 @@ class Perl_Random
     /**
      * Return a pseudo-random integer of 48 bits.
      *
-     * This function don't use srand() or mt_rand() in order to avoid side
+     * This function doesn't use srand() or mt_rand() in order to avoid side
      * effects.
      *
      * @return integer 48-bit integer.

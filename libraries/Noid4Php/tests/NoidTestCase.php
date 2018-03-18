@@ -4,10 +4,12 @@
  * @package Noid
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Common methods to test Noid
  */
-class NoidTestCase extends PHPUnit_Framework_TestCase
+class NoidTestCase extends TestCase
 {
     public $dir;
     public $rm_cmd;

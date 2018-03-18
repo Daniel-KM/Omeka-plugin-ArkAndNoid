@@ -300,9 +300,7 @@ class Noid
 
         // Check if dba is installed.
         if (!extension_loaded('dba')) {
-            if (!function_exists('dl') || !dl('dba.so')) {
-                throw new Exception('Noid requires the extension "Database (dbm-style) Abstraction Layer" (dba).');
-            }
+            throw new Exception('Noid requires the extension "Database (dbm-style) Abstraction Layer" (dba).');
         }
 
         // Check if BerkeleyDB is installed.
