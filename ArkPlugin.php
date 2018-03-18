@@ -239,7 +239,7 @@ where: http://example.com/ark:/99999/',
 
         // Check if the database is created for the format Noid.
         if ($post['ark_format_name'] == 'noid') {
-            if ($post['ark_create_database']) {
+            if (!empty($post['ark_create_database'])) {
                 if ($processor->isDatabaseCreated()) {
                     throw new Omeka_Validate_Exception(__('The database exists already: remove it manually or change the path to create a new one.'));
                 }
