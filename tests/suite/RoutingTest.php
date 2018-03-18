@@ -13,7 +13,7 @@ class Ark_RoutingTest extends Ark_Test_AppTestCase
                 $this->dispatch($url);
                 $this->assertRoute('ark_id');
                 $this->assertModule('default');
-                $this->assertController(inflector::tableize($type));
+                $this->assertController(Inflector::tableize($type));
                 $this->assertAction('show');
                 $this->assertEquals($record->id, (integer) $this->request->getParam('id'));
             }
@@ -22,12 +22,14 @@ class Ark_RoutingTest extends Ark_Test_AppTestCase
 
     /**
      * Tests to check routing system for bad url.
+     *
+     * Omeka manages only its ark (its naan).
      */
-    public function testRoutingBadArk()
+    public function testRoutingBadNaan()
     {
         // Identifier of the second collection, but not the good naan.
         $url = '/ark%3A/54321/c02';
-        $this->setExpectedException('Omeka_Controller_Exception_404');
+        $this->setExpectedException('Zend_Controller_Dispatcher_Exception');
         $this->dispatch($url);
     }
 

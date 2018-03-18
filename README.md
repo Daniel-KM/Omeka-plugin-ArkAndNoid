@@ -164,6 +164,16 @@ is installed by default too on standard web servers and any Linux distribution
 The noid library wasn’t tested for php 7.1, where the output of rand() and
 srand() changed.
 
+### Automatic test
+
+For testing and debugging, phpunit 5.7 is required. If you don’t have it:
+
+```
+cd tests
+wget https://phar.phpunit.de/phpunit-5.7.phar
+php phpunit-5.7.phar
+```
+
 
 Usage
 -----

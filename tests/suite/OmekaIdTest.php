@@ -149,6 +149,7 @@ class Ark_OmekaIdTest extends Ark_Test_AppTestCase
 
             foreach (array_keys($test['results']) as $length) {
                 $parameters = array(
+                    'protocol' => 'ark:',
                     'naan' => '12345',
                     'prefix' => '',
                     'suffix' => '',
@@ -187,7 +188,7 @@ class Ark_OmekaIdTest extends Ark_Test_AppTestCase
             release_object($record);
         }
 
-        // Of course, because they are good...
+        // Of course, because they are good…
         $unique = array_unique($results);
         $this->assertTrue(count($unique) == count($results),
             __('Arks are identical for collection and item (prefix "%s").', $parameters['prefix']));

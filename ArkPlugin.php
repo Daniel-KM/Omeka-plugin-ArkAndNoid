@@ -4,7 +4,7 @@
  *
  * Creates and manages unique, universel and persistent ark identifiers.
  *
- * @copyright Daniel Berthereau, 2015-2016
+ * @copyright Daniel Berthereau, 2015-2018
  * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
  */
 
@@ -46,7 +46,7 @@ class ArkPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_options = array(
         'ark_protocol' => 'ark:',
         // 12345 means example and 99999 means test.
-        'ark_naan' => '99999',
+        'ark_naan' => '12345',
         'ark_naa' => 'example.org',
         'ark_subnaa' => 'sub',
         'ark_web_root' => WEB_ROOT,
@@ -193,7 +193,7 @@ where: http://example.com/ark:/99999/',
         $post = $args['post'];
 
         // Fill the disabled fields to avoid notices.
-        $post['ark_protocol'] = isset($post['ark_protocol']) ? $post['ark_protocol'] : get_option($post['ark_protocol']);
+        $post['ark_protocol'] = isset($post['ark_protocol']) ? $post['ark_protocol'] : get_option('ark_protocol');
         $post['ark_naan'] = isset($post['ark_naan']) ? $post['ark_naan'] : get_option('ark_naan');
         $post['ark_naa'] = isset($post['ark_naa']) ? $post['ark_naa'] : get_option('ark_naa');
         $post['ark_subnaa'] = isset($post['ark_subnaa']) ? $post['ark_subnaa'] : get_option('ark_subnaa');

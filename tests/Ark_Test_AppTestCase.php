@@ -75,7 +75,7 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
         parent::setUp();
 
         $this->_view = get_view();
-        $this->_view->addHelperPath(ARK_DIR . '/views/helpers', self::PLUGIN_NAME . '_View_Helper');
+        $this->_view->addHelperPath(PLUGIN_DIR . '/Ark/views/helpers', self::PLUGIN_NAME . '_View_Helper_');
 
         $pluginHelper = new Omeka_Test_Helper_Plugin;
         $pluginHelper->setUp(self::PLUGIN_NAME);
@@ -91,11 +91,16 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
         $this->_prepareRecords();
     }
 
-    public function _assertPreConditions()
+    public function assertPreConditions()
     {
+        $this->assertEquals('12345', get_option('ark_naan'), sprintf('The option "ark_naan" is not set.'));
+
         $records = $this->db->getTable('Collection')->findAll();
         $count = count($this->_recordsByType['Collection']);
         $this->assertEquals($count, count($records), sprintf('There should be %d collections.', $count));
+
+        $collection = $records[1];
+        $this->assertEquals('ark:/54321/c02', metadata($collection, array('Dublin Core', 'Identifier')), sprintf('The ark for the second collection is not set.'));
 
         $records = $this->db->getTable('Item')->findAll();
         $count = count($this->_recordsByType['Item']);
@@ -161,7 +166,7 @@ class Ark_Test_AppTestCase extends Omeka_Test_AppTestCase
                         }
                         $record = insert_item($metadataItem, $elementTexts);
                         if (!empty($recordMetadata['files'])) {
-                            $fileUrl = TEST_DIR . '/_files/test.txt';
+                            $fileUrl = TEST_DIR . '/_files/test.jpg';
                             $files[$recordMetadata['item_id']] = insert_files_for_item($record, 'Filesystem', array_fill(0, $recordMetadata['files'], $fileUrl));
                         }
                         break;
