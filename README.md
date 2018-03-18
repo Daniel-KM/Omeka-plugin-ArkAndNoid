@@ -159,10 +159,15 @@ that uses to be installed by default with Php, and the BerkeleyDB library, that
 is installed by default too on standard web servers and any Linux distribution
 (package libdb5.3 on Debian), because it is used in many basic tools.
 
-** WARNING **
+### Perl and php
 
-The noid library wasn’t tested for php 7.1, where the output of rand() and
-srand() changed.
+The output of perl (release 5.20 and greater) and php (before and since release
+7.1, where the output of `rand()` and `srand()` were [fixed] in the php
+algorithm), are the same for integers at least until 32 bits (perl limit, namely
+more than 4 000 000 000 identifiers).
+
+Anyway, it is recommended to use php 7.1 or higher, since previous versions of
+php are no more supported.
 
 ### Automatic test
 
@@ -195,7 +200,7 @@ You can run the command line tool too:
 php -f plugins/Ark/create_arks.php
 ```
 
-** IMPORTANT **
+**IMPORTANT**
 
 Even if a check is done after creation of an ark to avoid any duplicate, it’s
 not recommended to change parameters once records are public in order to keep
@@ -259,7 +264,7 @@ Second version of this plugin has been built for [Mines ParisTech].
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2015-2017
+* Copyright Daniel Berthereau, 2015-2018
 
 
 [Ark & Noid]: https://github.com/Daniel-KM/ArkAndNoid4Omeka
@@ -281,6 +286,7 @@ Copyright
 [specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
 [Clean Url]: https://github.com/Daniel-KM/CleanUrl
 [templates]: https://metacpan.org/pod/distribution/Noid/noid#TEMPLATES
+[fixed]: https://secure.php.net/manual/en/migration71.incompatible.php#migration71.incompatible.fixes-to-mt_rand-algorithm
 [plugin issues]: https://github.com/Daniel-KM/ArkAndNoid4Omeka/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
