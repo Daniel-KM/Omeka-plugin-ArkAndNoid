@@ -26,7 +26,7 @@ abstract class Ark_Qualifier_Abstract
     /**
      * Create the ark qualifier for a record.
      *
-     * @param AbstractRecord $record The record for which to create qualifier.
+     * @param Omeka_Record_AbstractRecord $record The record for which to create qualifier.
      * @return string|null The qualifier, else null if error (no file).
      */
     final public function create($record)
@@ -51,9 +51,9 @@ abstract class Ark_Qualifier_Abstract
     /**
      * Get a sub-record from an qualifier.
      *
-     * @param AbstractRecord $record The main record (item).
+     * @param Omeka_Record_AbstractRecord $record The main record (item).
      * @param string $qualifier
-     * @return AbstractRecord|null The record (file), if any.
+     * @return Omeka_Record_AbstractRecord|null The record (file), if any.
      */
     final public function getRecordFromQualifier($record, $qualifier)
     {

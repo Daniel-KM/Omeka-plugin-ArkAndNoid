@@ -12,7 +12,7 @@ abstract class Ark_Name_Abstract
     protected $_parameters;
 
     /**
-     * @var Record
+     * @var Omeka_Record_AbstractRecord
      */
     protected $_record;
 
@@ -83,7 +83,7 @@ abstract class Ark_Name_Abstract
     /**
      * Create the ark for a record.
      *
-     * @param AbstractRecord $record The record for which to create the ark.
+     * @param Omeka_Record_AbstractRecord $record The record for which to create the ark.
      * @return string|null The ark, else null if error (no institution).
      */
     final public function create($record)

@@ -396,7 +396,7 @@ where: http://example.com/ark:/99999/',
     /**
      * Add an ark to a record, if needed.
      *
-     * @param Record $record
+     * @param Omeka_Record_AbstractRecord $record
      * @return void
      */
     protected function _addArk($record)
@@ -612,7 +612,7 @@ where: http://example.com/ark:/99999/',
      *
      * @param string $format
      * @param string|null $recordType
-     * @return Ark_Name class.
+     * @return Ark_Name_Abstract class.
      */
     protected function _getArkProcessor($format, $recordType = null, $parameters = array())
     {

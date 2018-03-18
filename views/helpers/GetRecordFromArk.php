@@ -117,9 +117,9 @@ class Ark_View_Helper_GetRecordFromArk extends Zend_View_Helper_Abstract
     /**
      * Return the record from the qualifier part of an ark.
      *
-     * @param AbstractRecord $record Main record (item).
+     * @param Omeka_Record_AbstractRecord $record Main record (item).
      * @param string $qualifier The qualifier part of the ark.
-     * @return AbstractRecord|null The record, if any.
+     * @return Omeka_Record_AbstractRecord|null The record, if any.
      */
     protected function _getRecordFromQualifier($record, $qualifier)
     {

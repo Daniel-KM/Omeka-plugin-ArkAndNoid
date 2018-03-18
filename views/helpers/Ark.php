@@ -7,7 +7,7 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
     /**
      * Return the ark of a record.
      *
-     * @param AbstractRecord|array $record Record object or array with record
+     * @param Omeka_Record_AbstractRecord|array $record Record object or array with record
      * type and record id.
      * @param string $type  Optional type: text (default), name, absolute, link,
      * or route.
@@ -39,7 +39,7 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
     /**
      * Get the ark for the record.
      *
-     * @param AbstractRecord|array $record Record object or array with record
+     * @param Omeka_Record_AbstractRecord|array $record Record object or array with record
      * type and record id.
      * @param boolean $asRoute Return as array or as string.
      * @return string|array|null The ark of the record, or null.
@@ -96,7 +96,7 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
     /**
      * Return the qualifier part of an ark.
      *
-     * @param AbstractRecord $record
+     * @param Omeka_Record_AbstractRecord $record
      * @return string The qualifier.
      */
     protected function _getQualifier($record)
@@ -127,7 +127,7 @@ class Ark_View_Helper_Ark extends Zend_View_Helper_Abstract
      * This allows record to be an object or an array, in particular for
      * shortcodes.
      *
-     * @return AbstractRecord|null.
+     * @return Omeka_Record_AbstractRecord|null.
      */
     private function _getRecord($record)
     {
