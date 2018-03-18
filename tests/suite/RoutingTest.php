@@ -22,6 +22,17 @@ class Ark_RoutingTest extends Ark_Test_AppTestCase
 
     /**
      * Tests to check routing system for bad url.
+     */
+    public function testRoutingBadIdentifier()
+    {
+        // Identifier is bad collection, but the naan is good.
+        $url = '/ark%3A/12345/cxx';
+        $this->setExpectedException('Omeka_Controller_Exception_404');
+        $this->dispatch($url);
+    }
+
+    /**
+     * Tests to check routing system for bad url.
      *
      * Omeka manages only its ark (its naan).
      */
