@@ -368,7 +368,7 @@ $attribs = $isNoidReady ? array('disable' => true) : null;
 <fieldset id="fieldset-ark-interfarce"><legend><?php echo __('Interface'); ?></legend>
     <p class="explanation">
         <?php echo __('If any, the ark can be used in place of the items/show/:id.'); ?>
-        <?php echo __('The ark will not be used for other links (edit, delete...).'); ?>
+        <?php echo __('The ark will not be used for other links (edit, delete…).'); ?>
         <?php echo __('The ark will not be used for urls that are built manually in the theme (without the function url() or record_url()).'); ?>
 <?php if (plugin_is_active('CleanUrl')): ?>
         <br />
