@@ -267,7 +267,7 @@ Copyright
 * Copyright Daniel Berthereau, 2015-2018
 
 
-[Ark & Noid]: https://github.com/Daniel-KM/ArkAndNoid4Omeka
+[Ark & Noid]: https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid
 [Omeka]: https://omeka.org
 [ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
 [Cool URIs]: https://www.w3.org/TR/cooluris
@@ -284,10 +284,10 @@ Copyright
 [CDL example]: https://ezid.cdlib.org/learn/id_concepts
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
 [specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
-[Clean Url]: https://github.com/Daniel-KM/CleanUrl
+[Clean Url]: https://github.com/Daniel-KM/Omeka-plugin-CleanUrl
 [templates]: https://metacpan.org/pod/distribution/Noid/noid#TEMPLATES
 [fixed]: https://secure.php.net/manual/en/migration71.incompatible.php#migration71.incompatible.fixes-to-mt_rand-algorithm
-[plugin issues]: https://github.com/Daniel-KM/ArkAndNoid4Omeka/issues
+[plugin issues]: https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid/issues
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org

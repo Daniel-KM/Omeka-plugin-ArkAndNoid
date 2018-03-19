@@ -5,7 +5,7 @@ $attribs = $isNoidReady ? array('disable' => true) : null;
 <?php
     echo __('Ark allows to creates and manages unique, universel and persistent ark identifiers.') . '<br />';
     echo __('See %s and %sthe official help%s for more informations.',
-        '<a href="https://github.com/Daniel-KM/ArkForOmeka">ReadMe</a>',
+        '<a href="https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid">ReadMe</a>',
         '<a href="https://confluence.ucop.edu/display/Curation/ARK">', '</a>');
 ?>
 </p>
@@ -130,7 +130,7 @@ $attribs = $isNoidReady ? array('disable' => true) : null;
             <?php endif; ?>
             <p class="explanation">
                 <?php echo __('The template define the format of the identifiers.'); ?>
-                <?php echo __('See the %sreadme%s for explanation and examples.', '<a href="https://github.com/Daniel-KM/ArkAndNoid4Omeka#Presentation-of-Noid">', '</a>'); ?>
+                <?php echo __('See the %sreadme%s for explanation and examples.', '<a href="https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid#Presentation-of-Noid">', '</a>'); ?>
             </p>
         </div>
     </div>

@@ -13,8 +13,9 @@ The main goal of this version is for web services, that can create and manage
 standard noids without any dependancy. All commands and functions can be used as
 in the Perl version, via the command line or via the web.
 
-It is already implemented in [Omeka], an open source CMS designed to expose
-digitalized documents, via the plugin [Ark & Noid for Omeka].
+It is already implemented in [Omeka] and [Omeka S], an open source CMS designed
+to expose digitalized documents, via the addons [Ark & Noid for Omeka] and
+[Ark for Omeka S].
 
 Other versions exist in [Java] and [Ruby].
 
@@ -260,7 +261,9 @@ Current maintainers:
 [noid]: https://wiki.ucop.edu/display/Curation/NOID
 [perl tool]: http://search.cpan.org/~jak/Noid-0.424/
 [Omeka]: https://www.omeka.org
-[Ark & Noid for Omeka]: https://github.com/Daniel-KM/ArkAndNoid4Omeka
+[Omeka S]: https://www.omeka.org/s
+[Ark & Noid for Omeka]: https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid
+[Ark for Omeka S]: https://github.com/Daniel-KM/Omeka-S-module-Ark
 [Java]: https://confluence.ucop.edu/download/attachments/16744482/noid-java.tar.gz
 [Ruby]: https://github.com/microservices/noid
 [metacpan]: https://metacpan.org/pod/distribution/Noid/noid
