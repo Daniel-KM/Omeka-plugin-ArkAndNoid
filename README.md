@@ -207,6 +207,13 @@ not recommended to change parameters once records are public in order to keep
 the consistency and the sustainability of the archive.
 
 
+TODO
+----
+
+- Manage the policy statement by item.
+- Let the choice to link ark to the file and/or to the record.
+
+
 Warning
 -------
 
