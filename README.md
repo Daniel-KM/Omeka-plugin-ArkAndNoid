@@ -1,15 +1,16 @@
 Ark & Noid (plugin for Omeka)
 =============================
 
-[Ark & Noid] is a plugin for [Omeka] that creates and manages [ark identifiers],
+[Ark & Noid] is a plugin for [Omeka] that creates and manages [ARK identifiers],
 that can replace the default [cool URIs] of each record, that corresponds to the
 simple number of a row in a table of the database.
 
-Arks are short, opaque, meaningless, universal, unique and persistent ids for
-any records. The acronym "ark" means "Archival Resource Key". This is a
-reference to the Noah’s ark (digital documents will have a long life) and to the
-world of archives (Omeka can be an institutional archive) too. Optionally, the
-identifiers can be resolved via a service as [N2T], the Name-to-Thing Resolver.
+ARKs are short, opaque, meaningless, universal, unique and persistent ids for
+any records. The acronym "ARK" means "Archival Resource Key". As a mnemonic, one
+can think of Noah's ark (a vessel that safely keeps things for the long term, 
+from the story shared by the Abrahamic religions) and the world of archives 
+(Omeka can be an institutional archive) too. Optionally, the identifiers can be
+resolved via a service as [N2T], the Name-to-Thing Resolver.
 
 Arks may be built with the utility [Noid], that creates nice opaque identifiers,
 that is integrated too via the library [Noid4Php].
@@ -21,10 +22,10 @@ If you don’t have an authority number, the plugin will create a non standard
 ark, but nevertheless a unique and opaque identifier that can be managed.
 
 
-Presentation of Ark
+Presentation of ARK
 -------------------
 
-A full ark looks like (official example):
+A full ARK looks like (official example):
 
 ```
     http://example.org/ark:/12025/654xz321/s3/f8.05v.tiff
@@ -37,17 +38,17 @@ A full ark looks like (official example):
                    Name Assigning Authority Number (NAAN)
 ```
 
-In Omeka, by default, the ark of an item looks like:
+In Omeka, by default, the ARK of an item looks like:
 
     http://example.org/ark:/12025/b6KN
 
 The "12025" is the id of the institution, that is assigned for free by the
-[California Digital Library] to any institution with historical or archival
+[ARK Alliance] to any institution with historical or archival
 purposes. The "b6KN" is the short hash of the id, with a control key. The name
 is always short, because four characters are enough to create more than ten
 millions of unique names.
 
-In the Ark format, a slash "/" means a sub-resource or a hierarchy and a dot
+In the ARK format, a slash "/" means a sub-resource or a hierarchy and a dot
 "." means a variant, so each file gets its ark via the qualifier part (its order
 by default, but the original filename or the Omeka hash can be used):
 
@@ -81,16 +82,16 @@ systems [PURL], [DOI], [Handle], etc. (see the full [CDL example]):
 ```
 
 For more informations about persistent identifiers, see this [overview]. The
-full [specification] of ark can be checked too.
+full [specification] of ARK can be checked too.
 
 
-All arks are saved as Dublin Core Identifier, as recommended. This allows to
+All ARKs are saved as Dublin Core Identifier, as recommended. This allows to
 make a check to avoid duplicates, that are forbidden. This applies to collection
 and items. For files, the qualifier part is managed dynamically.
 
 The policy is available at "http://example.org/ark/policy" and "http://example.org/ark:/12345/policy".
 
-Ark can be displayed by default instead of the default internal ids. This plugin
+ARKs can be displayed by default instead of the default internal ids. This plugin
 is fully compatible with [Clean Url]: an ark can be used for machine purposes
 and a clean url for true humans and for the natural referencement by search
 engines.
@@ -183,16 +184,16 @@ php phpunit-5.7.phar
 Usage
 -----
 
-Ark ids are automatically added as identifiers when a collection or an item is
+ARK ids are automatically added as identifiers when a collection or an item is
 saved.
 
-Because an ark should be persistent, if an ark exists already, it will never be
+Because an ARK should be persistent, if an ARK exists already, it will never be
 removed or modified automatically. Nevertheless, if it is removed, a new one
 will be created according to the specified scheme. Note that the default
 internal format create unique ids based on the Omeka id, so the same is created
 if the parameters are the same.
 
-To set arks to existing records, simply select them in admin/items/browse and
+To set ARKs to existing records, simply select them in admin/items/browse and
 batch edit them, without any change.
 
 You can run the command line tool too:
@@ -202,7 +203,7 @@ php -f plugins/Ark/create_arks.php
 
 **IMPORTANT**
 
-Even if a check is done after creation of an ark to avoid any duplicate, it’s
+Even if a check is done after creation of an ARK to avoid any duplicate, it’s
 not recommended to change parameters once records are public in order to keep
 the consistency and the sustainability of the archive.
 
@@ -276,21 +277,21 @@ Copyright
 
 [Ark & Noid]: https://github.com/Daniel-KM/Omeka-plugin-ArkAndNoid
 [Omeka]: https://omeka.org
-[ark identifiers]: https://confluence.ucop.edu/display/Curation/ARK
+[ARK identifiers]: https://arks.org
 [Cool URIs]: https://www.w3.org/TR/cooluris
-[N2T]: http://n2t.org
-[Noid]: https://wiki.ucop.edu/display/Curation/NOID
+[N2T]: https://n2t.net
+[Noid]: https://n2t.net/e/noid.html
 [Noid4Php]: https://github.com/Daniel-KM/Noid4Php
 [Bibliothèque patrimoniale]: https://patrimoine.mines-paristech.fr
 [Mines ParisTech]: http://mines-paristech.fr
-[California Digital Library]: http://www.cdlib.org
+[ARK Alliance]: https://arks.org
 [NOID]: https://metacpan.org/pod/distribution/Noid/noid
 [PURL]: https://purl.org
 [DOI]: http://www.doi.org
 [Handle]: http://handle.net
 [CDL example]: https://ezid.cdlib.org/learn/id_concepts
 [overview]: http://www.metadaten-twr.org/2010/10/13/persistent-identifiers-an-overview
-[specification]: https://wiki.ucop.edu/download/attachments/16744455/arkspec.pdf?version=1&modificationDate=1440538826000&api=v2
+[specification]: https://arks.org/specs/
 [Clean Url]: https://github.com/Daniel-KM/Omeka-plugin-CleanUrl
 [templates]: https://metacpan.org/pod/distribution/Noid/noid#TEMPLATES
 [fixed]: https://secure.php.net/manual/en/migration71.incompatible.php#migration71.incompatible.fixes-to-mt_rand-algorithm
